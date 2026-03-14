@@ -1,0 +1,23 @@
+---
+layout: default
+---
+<div class="content-inner">
+  <div class="page-header">
+    {% if page.show_home_logo %}
+    <img src="{{ '/assets/images/logo.jpg' | relative_url }}" alt="NAC" class="home-logo">
+    {% endif %}
+    {% if page.eyebrow %}
+    <div class="page-eyebrow">{{ page.eyebrow }}</div>
+    {% endif %}
+    <h1>{{ page.title }}</h1>
+    {% if page.subtitle %}
+    <p class="page-subtitle">{{ page.subtitle }}</p>
+    {% endif %}
+  </div>
+  {% if page.hero_image %}
+  <div class="page-hero">
+    <img src="{{ page.hero_image | relative_url }}" alt="{{ page.title }}" class="page-hero-img">
+  </div>
+  {% endif %}
+  {{ content }}
+</div>

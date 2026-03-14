@@ -1,0 +1,682 @@
+---
+layout: tool
+title: "Ecosystem Explorer"
+tool_tagline: "Discover the diversity of talent."
+permalink: /tools/ecosystem-explorer/
+---
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800&family=Inconsolata:wght@300;400;500;700&display=swap');
+:root {
+  --bg:#08090d;--bg2:#0d0f15;--surf:#13161f;--surf2:#1a1e2a;
+  --border:#1f2535;--border2:#2a3148;--text:#b8c4d8;--text2:#6b7a96;--text3:#3d4a62;
+  --white:#e8edf8;--on:#00c9a7;--us:#f5a623;--nac:#4e9af1;
+  --t1:#00d4ff;--t2:#00e096;--t3:#a8ff78;--t4:#ff9a3c;--t5:#ff6b6b;
+  --t6:#c77dff;--t7:#ffd166;--t8:#43dfca;--t9:#6bcb77;--t10:#f4a261;
+  --red:#e63946;--acq:#ff4d88;
+}
+.eco-root *{margin:0;padding:0;box-sizing:border-box;}
+.eco-root{font-family:'Inconsolata',monospace;background:var(--bg);color:var(--text);height:calc(100vh - 280px);min-height:580px;overflow:hidden;display:flex;flex-direction:column;}
+.eco-root > header{display:flex;align-items:center;height:52px;border-bottom:1px solid var(--border);background:var(--bg2);flex-shrink:0;z-index:100;}
+.hdr-logo{padding:0 24px;border-right:1px solid var(--border);height:100%;display:flex;align-items:center;gap:12px;}
+.nac-tag{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:800;letter-spacing:3px;color:var(--nac);}
+.hdr-title{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:500;letter-spacing:3px;color:var(--text2);text-transform:uppercase;}
+.hdr-stats{display:flex;align-items:center;margin-left:auto;}
+.hstat{padding:0 22px;border-left:1px solid var(--border);height:52px;display:flex;flex-direction:column;justify-content:center;text-align:center;}
+.hstat .num{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;line-height:1;}
+.hstat .lbl{font-size:9px;letter-spacing:1.5px;color:var(--text3);text-transform:uppercase;margin-top:2px;}
+.hstat.on .num{color:var(--on)}.hstat.us .num{color:var(--us)}.hstat.al .num{color:var(--white);}
+.main{display:flex;flex:1;overflow:hidden;}
+/* SIDEBAR */
+.eco-sidebar{width:276px;flex-shrink:0;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;}
+.sb-sec{padding:13px 14px;border-bottom:1px solid var(--border);}
+.sb-lbl{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--text3);margin-bottom:9px;display:flex;align-items:center;gap:6px;}
+.sb-lbl::after{content:'';flex:1;height:1px;background:var(--border);}
+.srch{position:relative;}
+.srch input{width:100%;background:var(--surf);border:1px solid var(--border2);border-radius:3px;padding:8px 10px 8px 30px;color:var(--white);font-family:'Inconsolata',monospace;font-size:12px;outline:none;transition:border-color .15s;}
+.srch input:focus{border-color:var(--nac);}
+.srch input::placeholder{color:var(--text3);}
+.srch .si{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:14px;pointer-events:none;}
+.reg-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;}
+.rbtn{padding:7px 4px;background:var(--surf);border:1px solid var(--border2);border-radius:3px;font-family:'Inconsolata',monospace;font-size:10px;letter-spacing:.8px;cursor:pointer;color:var(--text2);transition:all .15s;text-align:center;}
+.rbtn:hover{background:var(--surf2);}
+.rbtn.a-all{background:rgba(78,154,241,.15);border-color:var(--nac);color:var(--nac);}
+.rbtn.a-on{background:rgba(0,201,167,.12);border-color:var(--on);color:var(--on);}
+.rbtn.a-us{background:rgba(245,166,35,.12);border-color:var(--us);color:var(--us);}
+.tier-list{display:flex;flex-direction:column;gap:3px;}
+.tbtn{display:flex;align-items:center;gap:8px;padding:5px 7px;border-radius:3px;border:1px solid transparent;background:transparent;cursor:pointer;font-family:'Inconsolata',monospace;font-size:10px;color:var(--text2);transition:all .12s;text-align:left;width:100%;}
+.tbtn:hover{background:var(--surf);}
+.tbtn.act{background:var(--surf);border-color:var(--border2);}
+.tnum{width:20px;height:20px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;font-family:'Barlow Condensed',sans-serif;}
+.tlbl{flex:1;font-size:10px;}
+.tcnt{font-size:9px;color:var(--text3);background:var(--surf2);padding:1px 6px;border-radius:8px;min-width:18px;text-align:center;}
+.rel-wrap{display:flex;flex-wrap:wrap;gap:4px;}
+.rfbtn{padding:4px 9px;border-radius:2px;border:1px solid var(--border2);background:var(--surf);font-family:'Inconsolata',monospace;font-size:10px;cursor:pointer;color:var(--text3);transition:all .15s;letter-spacing:.3px;}
+.rfbtn:hover{background:var(--surf2);color:var(--text2);}
+.rfbtn[data-r="client"].act{background:rgba(0,212,255,.12);border-color:#00d4ff55;color:#00d4ff;}
+.rfbtn[data-r="supplier"].act{background:rgba(0,224,150,.12);border-color:#00e09655;color:#00e096;}
+.rfbtn[data-r="partner"].act{background:rgba(200,125,255,.12);border-color:#c87dff55;color:#c87dff;}
+.rfbtn[data-r="acq"].act{background:rgba(255,77,136,.12);border-color:#ff4d8855;color:#ff4d88;}
+.rfbtn[data-r="edu"].act{background:rgba(107,203,119,.12);border-color:#6bcb7755;color:#6bcb77;}
+.rfbtn[data-r="gov"].act{background:rgba(244,162,97,.12);border-color:#f4a26155;color:#f4a261;}
+.node-list{flex:1;overflow-y:auto;padding:8px;}
+.node-list::-webkit-scrollbar{width:3px;}
+.node-list::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+.ncard{padding:8px 10px;margin-bottom:4px;border-radius:3px;border:1px solid var(--border);background:var(--surf);cursor:pointer;transition:all .1s;position:relative;overflow:hidden;}
+.ncard::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;}
+.ncard.ron::before{background:var(--on)}.ncard.rus::before{background:var(--us);}
+.ncard:hover{border-color:var(--border2);background:var(--surf2);}
+.ncard.sel{border-color:var(--nac);background:rgba(78,154,241,.08);}
+.ncard .nn{font-size:11px;font-weight:500;color:var(--white);margin-bottom:2px;line-height:1.3;}
+.ncard .nl{font-size:10px;color:var(--text3);}
+.ncard .nt{display:flex;gap:3px;margin-top:5px;flex-wrap:wrap;}
+.tag{font-size:8px;padding:2px 5px;border-radius:2px;letter-spacing:.5px;text-transform:uppercase;border:1px solid transparent;}
+.no-res{text-align:center;padding:30px 16px;color:var(--text3);font-size:11px;letter-spacing:1px;}
+/* CANVAS */
+.canvas-area{flex:1;position:relative;overflow:hidden;background:var(--bg);}
+canvas{display:block;width:100%;height:100%;cursor:grab;}
+canvas:active{cursor:grabbing;}
+.cv-ctrl{position:absolute;bottom:18px;left:18px;display:flex;gap:4px;z-index:10;}
+.cv-btn{width:32px;height:32px;background:var(--surf2);border:1px solid var(--border2);border-radius:3px;color:var(--text2);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .1s;font-family:monospace;}
+.cv-btn:hover{background:var(--surf);color:var(--white);}
+.cv-cnt{position:absolute;top:12px;left:50%;transform:translateX(-50%);background:var(--surf2);border:1px solid var(--border2);border-radius:20px;padding:4px 14px;font-size:10px;color:var(--text2);letter-spacing:1px;pointer-events:none;white-space:nowrap;z-index:10;}
+.cv-leg{position:absolute;bottom:18px;right:18px;background:var(--surf2);border:1px solid var(--border2);border-radius:3px;padding:10px 12px;z-index:10;transition:right .3s ease;font-size:9px;}
+.cv-leg.shifted{right:388px;}
+.lg-t{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:7px;padding-bottom:5px;border-bottom:1px solid var(--border);}
+.lg-r{display:flex;align-items:center;gap:7px;margin-bottom:4px;color:var(--text2);}
+.lg-d{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.lg-sep{border-top:1px solid var(--border);margin:5px 0;}
+/* TOOLTIP */
+.tip{position:fixed;background:var(--surf2);border:1px solid var(--border2);border-radius:3px;padding:8px 11px;pointer-events:none;z-index:100;font-size:11px;max-width:210px;opacity:0;transition:opacity .1s;}
+.tip.vis{opacity:1;}
+.tip-n{color:var(--white);font-weight:500;margin-bottom:2px;}
+.tip-l{font-size:9px;color:var(--text2);}
+.tip-t{font-size:9px;color:var(--text3);margin-top:3px;}
+/* DETAIL */
+.detail{position:absolute;right:0;top:0;bottom:0;width:375px;background:var(--bg2);border-left:1px solid var(--border);transform:translateX(100%);transition:transform .25s cubic-bezier(.4,0,.2,1);overflow-y:auto;z-index:20;}
+.detail.open{transform:translateX(0);}
+.detail::-webkit-scrollbar{width:3px;}
+.detail::-webkit-scrollbar-thumb{background:var(--border2);}
+.dp-hd{padding:18px 20px 15px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg2);z-index:1;}
+.dp-x{position:absolute;top:13px;right:13px;width:26px;height:26px;background:var(--surf);border:1px solid var(--border2);border-radius:3px;cursor:pointer;color:var(--text2);display:flex;align-items:center;justify-content:center;font-size:12px;transition:all .1s;}
+.dp-x:hover{color:var(--white);background:var(--surf2);}
+.dp-reg{display:inline-flex;align-items:center;gap:5px;font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:3px 8px;border-radius:2px;margin-bottom:9px;}
+.dp-reg.on{background:rgba(0,201,167,.12);color:var(--on);border:1px solid rgba(0,201,167,.3);}
+.dp-reg.us{background:rgba(245,166,35,.1);color:var(--us);border:1px solid rgba(245,166,35,.25);}
+.dp-nm{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:var(--white);line-height:1.2;margin-bottom:6px;}
+.dp-lc{font-size:11px;color:var(--text2);line-height:1.5;white-space:pre-line;}
+.dp-tr{display:inline-flex;align-items:center;gap:6px;margin-top:9px;font-size:10px;padding:3px 9px;border-radius:2px;background:var(--surf);border:1px solid var(--border2);color:var(--text2);}
+.dp-bd{padding:0 20px 24px;}
+.dp-s{margin-top:17px;}
+.dp-sl{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--text3);padding-bottom:7px;border-bottom:1px solid var(--border);margin-bottom:9px;}
+.dp-na{font-size:10px;color:var(--text2);font-style:italic;margin-bottom:7px;white-space:pre-line;}
+.dp-dc{font-size:11px;color:var(--text);line-height:1.7;}
+.dp-nt{font-size:11px;line-height:1.7;padding:11px 12px;border-radius:3px;background:rgba(230,57,70,.07);border-left:2px solid var(--red);color:var(--text);}
+.dp-rl{display:flex;flex-wrap:wrap;gap:5px;}
+.dp-rc{font-size:10px;padding:4px 10px;border-radius:2px;border:1px solid currentColor;letter-spacing:.3px;}
+.dp-wb{display:inline-flex;align-items:center;gap:5px;margin-top:10px;font-size:11px;color:var(--nac);padding:5px 10px;border-radius:3px;border:1px solid rgba(78,154,241,.3);background:rgba(78,154,241,.07);text-decoration:none;transition:all .15s;}
+.dp-wb:hover{background:rgba(78,154,241,.15);}
+.dp-pr{display:flex;align-items:center;gap:8px;margin-top:13px;padding:8px 12px;background:rgba(255,77,136,.07);border:1px solid rgba(255,77,136,.2);border-radius:3px;font-size:10px;color:var(--acq);letter-spacing:.3px;}
+</style>
+<style>
+.tool-content.is-fullscreen .eco-root{height:calc(100vh - 50px);min-height:0;}
+</style>
+<div class="eco-root">
+<header>
+  <div class="hdr-logo">
+    <span class="nac-tag">NAC</span>
+    <span style="color:var(--border2);font-size:18px">|</span>
+    <span class="hdr-title">Ecosystem Network Explorer</span>
+  </div>
+  <div class="hdr-stats">
+    <div class="hstat on"><div class="num" id="cON">—</div><div class="lbl">Ontario CA</div></div>
+    <div class="hstat us"><div class="num" id="cUS">—</div><div class="lbl">WNY USA</div></div>
+    <div class="hstat al"><div class="num" id="cAL">—</div><div class="lbl">Total</div></div>
+  </div>
+</header>
+<div class="main">
+  <div class="eco-sidebar">
+    <div class="sb-sec">
+      <div class="sb-lbl">Search</div>
+      <div class="srch">
+        <span class="si">⌕</span>
+        <input type="text" id="srchInp" placeholder="company, capability, location…">
+      </div>
+    </div>
+    <div class="sb-sec">
+      <div class="sb-lbl">Region</div>
+      <div class="reg-row">
+        <button class="rbtn a-all" onclick="setReg('all',this)">ALL</button>
+        <button class="rbtn" onclick="setReg('ON',this)">🍁 ON</button>
+        <button class="rbtn" onclick="setReg('US',this)">🦅 WNY</button>
+      </div>
+    </div>
+    <div class="sb-sec">
+      <div class="sb-lbl">Pipeline Tier</div>
+      <div class="tier-list" id="tierList"></div>
+    </div>
+    <div class="sb-sec">
+      <div class="sb-lbl">Relationship to NAC</div>
+      <div class="rel-wrap">
+        <button class="rfbtn act" data-r="client"   onclick="toggleR(this)">Client</button>
+        <button class="rfbtn act" data-r="supplier" onclick="toggleR(this)">Supplier</button>
+        <button class="rfbtn act" data-r="partner"  onclick="toggleR(this)">Partner</button>
+        <button class="rfbtn act" data-r="acq"      onclick="toggleR(this)">Acquisition</button>
+        <button class="rfbtn act" data-r="edu"      onclick="toggleR(this)">Education</button>
+        <button class="rfbtn act" data-r="gov"      onclick="toggleR(this)">Gov/Funding</button>
+      </div>
+    </div>
+    <div class="node-list" id="nodeList"></div>
+  </div>
+
+  <div class="canvas-area">
+    <div class="cv-cnt" id="cvCnt">Loading…</div>
+    <canvas id="cvs"></canvas>
+    <div class="cv-ctrl">
+      <button class="cv-btn" onclick="doZoom(1.2)">+</button>
+      <button class="cv-btn" onclick="doZoom(.83)">−</button>
+      <button class="cv-btn" onclick="resetView()" style="font-size:12px">⌖</button>
+    </div>
+    <div class="cv-leg" id="leg">
+      <div class="lg-t">Region</div>
+      <div class="lg-r"><div class="lg-d" style="background:var(--on)"></div>Ontario, Canada</div>
+      <div class="lg-r"><div class="lg-d" style="background:var(--us)"></div>WNY, USA</div>
+      <div class="lg-sep"></div>
+      <div class="lg-t">Tier</div>
+      <div class="lg-r"><div class="lg-d" style="background:var(--t1)"></div>T1 Core Electronics</div>
+      <div class="lg-r"><div class="lg-d" style="background:var(--t2)"></div>T2 Machining</div>
+      <div class="lg-r"><div class="lg-d" style="background:var(--t3)"></div>T3 Plastics</div>
+      <div class="lg-r"><div class="lg-d" style="background:var(--t4)"></div>T4 Metal Fab</div>
+      <div class="lg-r"><div class="lg-d" style="background:var(--t5)"></div>T5 OEM Anchors</div>
+      <div class="lg-r"><div class="lg-d" style="background:var(--t6)"></div>T6 Automation</div>
+      <div class="lg-r"><div class="lg-d" style="background:var(--t7)"></div>T7 Utilities</div>
+      <div class="lg-r"><div class="lg-d" style="background:var(--t8)"></div>T8 Logistics</div>
+      <div class="lg-r"><div class="lg-d" style="background:var(--t9)"></div>T9 Education</div>
+      <div class="lg-r"><div class="lg-d" style="background:var(--t10)"></div>T10 Assoc/Gov</div>
+    </div>
+    <!-- Detail Panel -->
+    <div class="detail" id="detail">
+      <div class="dp-hd">
+        <button class="dp-x" onclick="closeDetail()">✕</button>
+        <div class="dp-reg" id="dpReg"></div>
+        <div class="dp-nm"  id="dpNm"></div>
+        <div class="dp-lc"  id="dpLc"></div>
+        <div class="dp-tr"  id="dpTr"></div>
+      </div>
+      <div class="dp-bd">
+        <div class="dp-s">
+          <div class="dp-sl">Classification</div>
+          <div class="dp-na" id="dpNa"></div>
+          <div class="dp-dc" id="dpDc"></div>
+          <a class="dp-wb" id="dpWb" href="#" target="_blank" style="display:none">↗ <span id="dpWbT"></span></a>
+        </div>
+        <div class="dp-s">
+          <div class="dp-sl">Relationship to NAC</div>
+          <div class="dp-rl" id="dpRl"></div>
+        </div>
+        <div class="dp-s">
+          <div class="dp-sl">▶ Strategic Note</div>
+          <div class="dp-nt" id="dpNt"></div>
+        </div>
+        <div id="dpPr" class="dp-pr" style="display:none">🎯 <span id="dpPrT"></span></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="tip" id="tip">
+  <div class="tip-n" id="tipN"></div>
+  <div class="tip-l" id="tipL"></div>
+  <div class="tip-t" id="tipT"></div>
+</div>
+
+<script>
+const TC={1:'#00d4ff',2:'#00e096',3:'#a8ff78',4:'#ff9a3c',5:'#ff6b6b',6:'#c77dff',7:'#ffd166',8:'#43dfca',9:'#6bcb77',10:'#f4a261'};
+const TL={1:'Core Electronics',2:'Precision Machining',3:'Plastics & Molding',4:'Metal Fabrication',5:'OEM Anchors',6:'Automation',7:'Utilities',8:'Logistics',9:'Education',10:'Assoc/Gov'};
+const RC={client:'#00d4ff',supplier:'#00e096',partner:'#c87dff',acq:'#ff4d88',edu:'#6bcb77',gov:'#f4a261'};
+
+const NODES=[
+// ── ONTARIO T1
+{id:'accipiter',region:'ON',tier:1,priority:'HIGH',name:'Accipiter Radar Technologies',loc:'Pelham, Ontario',naics:'334 – Computer & Electronic Product Mfg\n335 – Electrical Equipment & Component Mfg',web:'accipiterradar.com',desc:'Designs and manufactures intelligent radar surveillance and detection networks for aviation, industrial, and security applications. Full embedded systems development house — antennas, RF electronics, signal processing DSPs, and ruggedized enclosures all developed in-house. Member of the Niagara Industrial Association.',note:'Elite local peer doing sophisticated embedded radar work. Deep firmware and FPGA expertise. They represent the calibre of OEM client NAC aspires to serve and are a strong reference customer if you can provide assembly or test services to their supply chain. Build a relationship early.',rels:['client','partner']},
+{id:'acrobat',region:'ON',tier:1,name:'Acrobat PCA',loc:'St. Catharines, Ontario',naics:'335 – Electrical Equipment, Appliance & Component Mfg',web:'acrobatpca.com',desc:'Manufactures power, controls, and automation equipment for industrial clients. Designs and assembles control panels, motor drives, PLC enclosures, and custom switchgear. In operation since 2006. Member of the Niagara Industrial Association.',note:'Direct PCBA client opportunity. Control panel builders routinely source custom PCBs and embedded firmware. Ideal early outreach target — their product line overlaps with NAC\'s firmware optimization services for industrial edge computing.',rels:['client']},
+{id:'base_elec',region:'ON',tier:1,name:'Base Electronics',loc:'871 Niagara St Unit 2, Welland, Ontario L3C 6Y1',naics:'334 – Computer & Electronic Product Mfg',web:'southniagaracc.com',desc:'Local electronics business serving the South Niagara corridor. Member of South Niagara Chambers of Commerce. Provides electronics services and components to regional clients.',note:'Small shop worth a site visit. Could be a referral source for overflow work or a potential roll-up target. Welland location is ideal for the Fort Erie expansion corridor.',rels:['partner','acq']},
+{id:'scott',region:'ON',tier:1,name:'Scott & Spinney',loc:'Niagara Falls, Ontario',naics:'333 – Machinery Manufacturing\n335 – Electrical Equipment Mfg',web:'',desc:'Three-division operation: custom machinery and equipment building, metal forming and fabricating, and electrical custom machinery and equipment design. Builds bespoke production equipment for industrial clients.',note:'Both a supplier and a client. They can fabricate production fixtures and test jigs for your assembly line (supplier), and their electrical division may need custom PCBs and firmware for their machinery builds (client). High-priority dual-use relationship.',rels:['client','supplier']},
+{id:'ophardt',region:'ON',tier:1,priority:'HIGH',name:'Ophardt Hygiene Technologies',loc:'Niagara Region, Ontario',naics:'334 / 335 – Electronic Product & Electrical Equipment Mfg',web:'',desc:'Manufactures intelligent dispensing systems — automated soap, sanitizer, and hygiene product dispensers with electronic control systems, sensors, and wireless connectivity. Products embed microcontrollers, capacitive sensing, and NFC/BLE communications.',note:'Premier OEM client target. Their embedded product line requires PCB assembly, firmware for microcontrollers (likely ARM Cortex-M class), and small-batch production. They represent exactly the type of client NAC\'s integrated assembly-plus-firmware offer was built to serve.',rels:['client']},
+{id:'jtg',region:'ON',tier:1,name:'JTG Systems — Electronics Recycling',loc:'577 Niagara Street, Welland, Ontario\n(905) 892-4555',naics:'811 – Repair & Maintenance',web:'jtgsystems.com',desc:'Niagara\'s primary electronics recycling and repair operation with 20+ years of experience and 1,100+ five-star reviews. Processes computers, circuit boards, batteries, and consumer electronics from Welland, St. Catharines, and Thorold.',note:'Critical strategic partner for NAC\'s e-waste and refurbishment pillar. Their component stream — recovered circuit boards, processors, and metals — is feedstock for a component recovery and resale program. Consider a formal intake partnership or acquisition path.',rels:['partner','acq']},
+// ── ONTARIO T2
+{id:'niag_prec',region:'ON',tier:2,name:'Niagara Precision',loc:'32 Seapark Drive, St. Catharines, Ontario L2M 6S6',naics:'332 – Fabricated Metal Product Manufacturing',web:'',desc:'CNC machining services since 1975 serving both Canadian and U.S. customers. Trusted manufacturer and fabricator of precision components. Long track record in tight-tolerance work across automotive, industrial, and defense supply chains.',note:'Your first call for prototype chassis and custom enclosure machining. 50 years of operation means stable management and process discipline. Their U.S. cross-border experience is useful context for your Buffalo-Niagara expansion.',rels:['supplier']},
+{id:'dd_custom',region:'ON',tier:2,name:'D & D Custom Steel Products',loc:'Niagara Region, Ontario',naics:'332 – Fabricated Metal Product Manufacturing',web:'',desc:'Provides complete custom machine services specializing in CNC horizontal boring and CNC turning. Services clients across Niagara and southern Ontario.',note:'Strong candidate for large structural components, custom tooling bases, and production equipment frames. CNC boring expertise is useful for precision fixture work on your SMT line.',rels:['supplier']},
+{id:'abatement',region:'ON',tier:2,priority:'HIGH',name:'Abatement Technologies',loc:'Fort Erie, Ontario',naics:'333 – Machinery Manufacturing',web:'abatement.ca',desc:'Specializes in laser cutting and turret punching, programmable shearing, forming, folding, welding, and assembly. Offers 3D graphical CAD services. Member of the Niagara Industrial Association.',note:'Fort Erie location makes this a primary enclosure fabrication partner for the NAC Fort Erie hub. Laser cutting precision for sheet metal enclosures on custom handheld and industrial IoT products. CAD capability means design collaboration is possible — not just job-shop work. HIGH STRATEGIC PRIORITY.',rels:['supplier']},
+{id:'niag_pat',region:'ON',tier:2,name:'Niagara Pattern Ltd.',loc:'Niagara Falls, Ontario',naics:'332 – Fabricated Metal & Pattern Manufacturing',web:'',desc:'Produces patterns, models, and fixtures in wood, metal, urethane, foam, and composite materials. Specializes in CNC-cut OEM masters for automotive and industrial applications. Also produces CMM nesting fixtures and prototype parts for plastic and rubber industries.',note:'Essential for tooling masters, device housing prototypes, and low-volume casting patterns. Good partnership for pre-production prototyping before Peninsula Plastics takes a mold to injection production.',rels:['supplier']},
+// ── ONTARIO T3
+{id:'peninsula',region:'ON',tier:3,priority:'ACQ',name:'Peninsula Plastics Ltd.',loc:'Ridgeway / Fort Erie, Ontario\n65,000 sq ft facility — Est. 1976',naics:'326 – Plastics & Rubber Products Manufacturing',web:'',desc:'Custom plastic injection molding operation since 1976. Full-service offering covers consultation, 3D printing, part and mould design, manufacturing, packaging, warehousing, and shipping. Serves industrial, automotive, and consumer product clients.',note:'Primary local plastics manufacturing partner AND top acquisition candidate given their age and likely succession planning needs. Fort Erie location is physically adjacent to your planned expansion hub — supply chain logistics are trivial. 3D printing capability enables rapid prototype iteration before committing to hard tooling.',rels:['supplier','acq']},
+{id:'agri_plas',region:'ON',tier:3,name:'Agri-Plastics Mfg',loc:'Grassie (West Lincoln), Ontario',naics:'326 – Plastics & Rubber Products Manufacturing',web:'agri-plastics.net',desc:'Manufactures rubber and plastic components. High-volume rubber compounding and forming capability.',note:'Rubber components supplier for ruggedized electronics: gaskets, O-rings, cable management grommets, anti-vibration mounts, and sealed connector boots for field-deployed devices.',rels:['supplier']},
+// ── ONTARIO T4
+{id:'oskam',region:'ON',tier:4,name:'J. Oskam Steel Fabricators',loc:'St. Catharines, Ontario',naics:'332 – Fabricated Metal Product Manufacturing',web:'',desc:'Established structural and custom metal fabrication shop serving industrial clients across the Niagara region. Welded assemblies, structural steel, and custom metal components.',note:'Production line infrastructure partner. Custom rack systems, SMT line frames, storage shelving, and assembly workstation frames. Useful for facility buildout of the Hamilton and Fort Erie locations.',rels:['supplier']},
+{id:'tiw',region:'ON',tier:4,name:'TIW Steel Platework Inc.',loc:'St. Catharines, Ontario',naics:'332 – Fabricated Metal Product Manufacturing',web:'',desc:'Heavy plate fabrication and large welded assemblies. Specializes in pressure vessels, tanks, and large structural steel work for industrial applications.',note:'For heavy machine enclosures, large-format production equipment, and structural elements of custom test fixtures. Engage for larger capital equipment projects.',rels:['supplier']},
+{id:'nims',region:'ON',tier:4,name:'Niagara Industrial Mechanical Services',loc:'Niagara Region, Ontario',naics:'332 / 238 – Fabricated Metal & Specialty Trade Contractors',web:'',desc:'Full-service mechanical contractor offering fabrication, pipefitting, structural welding, electrical, HVAC, rigging, and industrial maintenance.',note:'Facility buildout and production equipment installation contractor. Use for installing SMT lines, reflow ovens, conveyor systems, HVAC upgrades for ESD-controlled environments, and compressed air infrastructure.',rels:['supplier']},
+{id:'metal_sup',region:'ON',tier:4,name:'Metal Supermarkets Niagara',loc:'113 Cushman Rd, St. Catharines, Ontario L2M 6S9\nSame-day delivery regionwide',naics:'417 – Machinery, Equipment & Supplies Wholesale',web:'metalsupermarkets.com',desc:'5,000 sq ft warehouse stocking cut-to-size steel, aluminum, copper, brass, stainless steel, and specialty metals. Same-day delivery throughout the entire Niagara region. Commercial credit terms available.',note:'Day-one working relationship. Open a commercial account immediately. Same-day delivery eliminates MOQ and lead-time constraints of ordering from Toronto-area distributors for prototype and short-run production work.',rels:['supplier']},
+// ── ONTARIO T5
+{id:'innio',region:'ON',tier:5,priority:'HIGH',name:'INNIO Waukesha Canada',loc:'Welland, Ontario (GE Brilliant Factory)',naics:'333 – Machinery Manufacturing (Industrial Engines)',web:'innio.com',desc:'Manufactures Waukesha-brand large reciprocating gas engines in Welland for global power generation and gas compression markets. 100+ year legacy operation (formerly GE Distributed Power). Primary Canadian facility is a connected smart factory built to GE Brilliant Factory standards with real-time industrial IoT data analytics on the manufacturing floor.',note:'Major industrial IoT opportunity. Their Welland plant is already instrumented for real-time data — they understand edge computing and industrial sensors. Firmware for condition monitoring, predictive maintenance edge nodes, and custom test equipment for engine control modules are all plausible service engagements.',rels:['client']},
+{id:'gm',region:'ON',tier:5,name:'GM Components Plant — St. Catharines',loc:'285 Ontario Street, St. Catharines, Ontario',naics:'336 – Transportation Equipment Manufacturing',web:'',desc:'GM\'s powertrain and components manufacturing complex — successor to McKinnon Industries, in continuous operation since 1901. Manufactures transmissions, axles, and propulsion system components. One of Niagara\'s largest employers.',note:'Supply chain intelligence target. GM\'s Tier 1 and Tier 2 suppliers in Niagara — sensor manufacturers, actuator suppliers, control system integrators — all need custom PCBA, firmware, and test solutions. Target the supplier ecosystem, not direct GM engagement.',rels:['client']},
+{id:'bosch',region:'ON',tier:5,name:'Bosch Rexroth Canada',loc:'Welland, Ontario (Canadian headquarters)',naics:'333 – Machinery Manufacturing\n335 – Electrical Equipment Mfg',web:'boschrexroth.com/en/ca',desc:'Canadian headquarters of the global drive and control technology leader. Supports hydraulics, electric drives and controls, gear technology, and linear motion products. Manufactures industrial motion control systems — servo drives, PLCs, and hydraulic valves with digital Bluetooth on-board electronics.',note:'Elite client and ecosystem partner. Their valves with Bluetooth digital on-board electronics are exactly the kind of product that needs embedded firmware support and PCBA services. Build a relationship through the NIA and target their procurement and engineering teams for pilot projects.',rels:['client','partner']},
+{id:'airbus',region:'ON',tier:5,name:'Airbus Helicopters Canada',loc:'Fort Erie, Ontario',naics:'336 – Transportation Equipment Manufacturing',web:'airbushelicopters.ca',desc:'Assembles, manufactures, markets, and supports Airbus rotary-wing aircraft for the Canadian market. Fort Erie facility handles final assembly and support operations.',note:'Fort Erie anchor tenant and workforce standard-setter. Their supply chain — avionics suppliers, cable harness manufacturers, electronics MRO providers — represents a high-value procurement community accessible through the local business network.',rels:['client']},
+// ── ONTARIO T6
+{id:'ai_innov',region:'ON',tier:6,name:'AI Innovate',loc:'Welland, Ontario',naics:'518 – Data Processing & Related Services',web:'ai-innovate.com',desc:'Provides AI-powered quality control solutions for manufacturing. Claims 35% reduction in quality control costs. Computer vision and machine learning applied to production line defect detection. Member of the Niagara Industrial Association.',note:'Direct integration partner for NAC\'s assembly QC workflow. Layer their vision AI on top of your AOI process for defect learning and process improvement feedback loops. Explore a referral and co-marketing arrangement.',rels:['partner']},
+{id:'niag_elec',region:'ON',tier:6,name:'Niagara Electric — Industrial Automation',loc:'Niagara Region, Ontario',naics:'238 – Specialty Trade Contractors (Electrical)',web:'niagaraelectric.ca',desc:'30+ years of electrical experience specializing in generator installations, panel changes and upgrades, and industrial automation systems.',note:'Industrial automation electrician for your production floor. Engage for SMT conveyor wiring, reflow oven power, compressed air control panels, ESD flooring ground bonding, and PLC panel installations.',rels:['supplier']},
+{id:'spruce',region:'ON',tier:6,name:'Spruceside Electric',loc:'Fonthill (Pelham), Ontario',naics:'238 – Specialty Trade Contractors (Electrical)',web:'sprucesideelectric.ca',desc:'Modern electrical contracting firm specializing in system integration and advanced technology. Expertise in smart systems, home automation, and bridging electrical craft with cutting-edge technology.',note:'Relevant for smart facility buildout at NAC locations — integrating IoT building management, energy monitoring, EV charging infrastructure, and industrial control systems.',rels:['supplier']},
+// ── ONTARIO T7
+{id:'npei',region:'ON',tier:7,name:'Niagara Peninsula Energy Inc.',loc:'Fort Erie / Regional, Ontario',naics:'221 – Utilities',web:'',desc:'Local distribution company providing electrical distribution to Fort Erie, Port Colborne, Welland, and surrounding communities. One of seven LDCs in the Niagara region.',note:'Engage early for commercial manufacturing rate applications and demand response program eligibility. Fort Erie\'s Gateway CIP signals the municipality wants industrial investment — NPEI\'s economic development contacts can facilitate favorable interconnection.',rels:['gov']},
+{id:'alectra',region:'ON',tier:7,name:'Alectra Utilities (Hamilton)',loc:'Hamilton, Ontario (and broader Golden Horseshoe)',naics:'221 – Utilities',web:'',desc:'One of the largest municipally-owned electricity distributors in Ontario. Serves Hamilton, Brampton, Guelph, and Markham. Offers commercial and industrial programs, demand management incentives, and energy efficiency programs.',note:'Primary utility for the Hamilton NAC headquarters facility. Apply for industrial rate classification, which at Hamilton-scale manufacturing volumes can reduce effective energy cost 15–25% versus commercial rates.',rels:['gov']},
+{id:'nypa_on',region:'ON',tier:7,name:'NYPA Cross-Border Power',loc:'Niagara Power Project, Lewiston, New York (cross-border)',naics:'221 – Utilities (Cross-Border)',web:'nypa.gov',desc:'NYPA operates the Robert Moses Niagara Power Plant — one of the largest hydroelectric facilities in North America. Provides low-cost hydropower to qualified manufacturers. Rates can be 40–60% below market for qualifying operations.',note:'Strategic asset for the Fort Erie–Buffalo cross-border play. If operations expand into Western New York, NYPA low-cost power is a significant operating cost lever. Combine with START-UP NY (SUNY partnership) for compounded incentive value.',rels:['gov']},
+// ── ONTARIO T8
+{id:'stanpac',region:'ON',tier:8,name:'Stanpac Inc.',loc:'Smithville (West Lincoln), Ontario',naics:'322 – Packaging Manufacturing',web:'',desc:'Manufacturer of packaging and packaging materials serving food, beverage, and industrial clients. Custom packaging runs for varied client types.',note:'Engage for ESD-safe anti-static bags, foam-lined shipping cartons, labeled product boxes, and palletized shipment packaging for assembled electronics. Custom printed packaging for OEM clients builds brand professionalism.',rels:['supplier']},
+// ── ONTARIO T9
+{id:'niag_col',region:'ON',tier:9,priority:'HIGH',name:'Niagara College',loc:'Welland Campus & Niagara-on-the-Lake Campus',naics:'611 – Educational Services',web:'niagaracollege.ca',desc:'Ontario College offering Electronics Technician, Electromechanical Engineering Technician, Computer Systems Technician, and Mechatronics Engineering Technician programs. The Welland campus hosts the technical trade programs. Co-op placement streams available to industry partners.',note:'Your primary workforce pipeline and curriculum partnership. NAC\'s training pillar should be developed in explicit coordination with Niagara College — offer to guest instruct in firmware, SMT assembly, and production QC. Register as co-op employer as early as month three of operation.',rels:['edu','partner']},
+{id:'brock',region:'ON',tier:9,name:'Brock University',loc:'1812 Sir Isaac Brock Way, St. Catharines, Ontario L2S 3A1',naics:'611 – Educational Services',web:'brocku.ca',desc:'Full university with Computer Science, Physics, Electrical Engineering (shared programs), and Business faculties. Hosts a 3D printing lab through the library system. MITACS research grant program available to companies partnering with Brock faculty.',note:'University-level research partner for embedded systems optimization, energy-efficient computing architectures, and binary-level firmware research — all directly aligned with NAC\'s firmware pillar. MITACS grants fund student researchers at 50% cost share.',rels:['edu','partner','gov']},
+{id:'mcmaster',region:'ON',tier:9,name:'McMaster University — Engineering',loc:'1280 Main Street West, Hamilton, Ontario L8S 4L8',naics:'611 – Educational Services',web:'mcmaster.ca',desc:'Research-intensive university with Electrical and Computer Engineering, Mechanical Engineering, and Materials Science programs. Strong embedded systems and semiconductor device research groups. McMaster\'s Centre for Emerging Device Technologies (CEDT) works on next-generation microelectronics.',note:'Hamilton headquarters anchor for NAC\'s R&D credibility. McMaster engineering faculty are natural collaborators for firmware optimization and edge computing. NSERC Engage grants (~$25K) and MITACS Accelerate are both accessible. Priority relationship.',rels:['edu','partner','gov']},
+{id:'ub_on',region:'ON',tier:9,name:'University at Buffalo (Cross-Border)',loc:'Buffalo, New York — 20 min from Fort Erie via Peace Bridge',naics:'611 – Educational Services (Cross-Border)',web:'buffalo.edu',desc:'Major research university with strong Electrical Engineering, Computer Science, and Industrial Engineering programs. Active embedded systems, IoT, and semiconductor research. Potential START-UP NY partnership pathway — companies partnering with SUNY institutions can access 10-year tax abatement programs.',note:'Cross-border academic anchor for the Fort Erie–Buffalo expansion strategy. START-UP NY partnerships require a formal agreement with the SUNY institution. Target their Electrical Engineering department for embedded systems research collaboration.',rels:['edu','partner']},
+// ── ONTARIO T10
+{id:'nia',region:'ON',tier:10,priority:'HIGH',name:'Niagara Industrial Association',loc:'3550 Schmon Parkway Unit 1B, Thorold, Ontario L2V 4Y6\n289.969.6008 | info@niagaraindustry.com',naics:'813 – Professional & Industry Organizations',web:'niagaraindustry.com',desc:'The primary industrial membership association for the Niagara Peninsula. Full member directory (gated, NAICS-searchable) covers 334/335 electronics, 332/333 metal fabricators, 326 plastics, 336 transportation, and all supporting sectors. Hosts regular events and advocacy on behalf of regional manufacturers.',note:'JOIN IMMEDIATELY. The full member directory — inaccessible publicly — is the single most valuable resource for NAC\'s business development and acquisition research. Annual events provide direct access to decision-makers at every company in this document.',rels:['partner','gov']},
+{id:'niag_edev',region:'ON',tier:10,name:'Niagara Economic Development',loc:'Regional Municipality of Niagara, Ontario',naics:'912 – Regional Economic Development',web:'niagaracanada.com',desc:'Regional economic development agency responsible for attracting and retaining investment across all 12 Niagara municipalities. Manages the Gateway Community Improvement Plan (CIP) in Fort Erie offering substantial property tax relief to qualifying manufacturers.',note:'Your direct pipeline to Fort Erie Gateway CIP incentives, regional site selection support. Their data shows Niagara-based manufacturers can achieve 19–28% cost savings versus other Ontario locations. Book a meeting with their manufacturing sector lead before signing any Fort Erie lease.',rels:['gov','partner']},
+{id:'innov_fac',region:'ON',tier:10,name:'Innovation Factory (Hamilton)',loc:'Hamilton, Ontario',naics:'541 – Professional, Scientific & Technical Services',web:'',desc:'Regional innovation centre and business accelerator serving Hamilton and the greater Golden Horseshoe. Provides mentorship, business planning support, connections to NRC IRAP, and connections to seed and angel investment networks.',note:'Your Hamilton headquarters support structure. NRC IRAP connections can facilitate grant applications worth $50K–$250K for eligible firmware and embedded systems development work.',rels:['gov','partner']},
+{id:'sncc',region:'ON',tier:10,name:'South Niagara Chambers of Commerce',loc:'Serving: Fort Erie, Niagara Falls, Port Colborne, Welland/Pelham',naics:'813 – Professional & Industry Organizations',web:'southniagaracc.com',desc:'Combined chamber organization representing businesses across South Niagara. Hosts networking events, business directory, and advocacy for local business. Base Electronics and INNIO Waukesha Canada are among their members.',note:'Secondary business network complementing the NIA. Particularly relevant for Fort Erie community relationships and access to municipal contacts.',rels:['partner']},
+
+// ════════════════════════ USA ════════════════════════════
+// ── USA T1
+{id:'sparcz',region:'US',tier:1,priority:'HIGH',name:'Sparcz Engineering Inc.',loc:'Buffalo, New York — 716-681-0381',naics:'334 – Computer & Electronic Product Mfg\n541 – Engineering Services',web:'sparcz-eng.com',desc:'Electronics engineering and design firm founded 1994 by Ron Sparcz (B.S. EE, University at Buffalo). Specializes in design and fabrication of automated test equipment and complete electronic assemblies for space, defense, aerospace, industrial, and medical markets. Capabilities include mixed-signal and RF designs, microcontroller firmware programming, SMT/thru-hole soldering, cable and harness assembly. Member of BNMA.',note:'Most important Buffalo-side peer relationship. Sparcz does firmware programming, RF design, ATE fabrication, and SMT assembly — virtually the same integrated offering NAC is building. Simultaneously a model to study, a referral source, and a strategic acquisition target if succession planning opens an opportunity. Founder Ron Sparcz is a UB CEL graduate. Meet early.',rels:['partner','acq']},
+{id:'kinney',region:'US',tier:1,name:'Kinney Industries Inc.',loc:'Western New York (ISO 9001:2015, ITAR registered)',naics:'334 / 335 – Contract Electronics Manufacturing',web:'kinneyindustries.com',desc:'Contract electronics manufacturer since 1972. Produces cable and wire harness assemblies, electromechanical assemblies, machined components (CNC, lathe, EDM), and injection-molded parts. Full engineering services. ITAR registered. Serves defense and aerospace supply chains.',note:'Comprehensive contract manufacturer spanning wire harnesses, CNC machining, injection molding, and electronics assembly. Their ITAR registration makes them a gateway to defense work. Strong acquisition or joint-venture candidate. Study their service model closely.',rels:['partner','supplier','acq']},
+{id:'via_tech',region:'US',tier:1,name:'Via Technology Inc.',loc:'Buffalo, New York (since 1993)',naics:'334 / 541 – PCB Design & Electronics Engineering',web:'viatechnology.com',desc:'Electronic design engineering providing PCB layout, firmware and software development, prototyping, testing, and production assembly via ISO9001 and ITAR-registered U.S.-based contract manufacturers. Serves aerospace, medical, defense, and industrial markets.',note:'Design-house model that outsources fabrication — NAC\'s vertically integrated offer is more complete. A referral partnership makes sense: they design boards that need assembly and firmware; NAC can be their preferred assembly partner on the Fort Erie side for Canadian clients.',rels:['partner','client']},
+{id:'tapecon',region:'US',tier:1,name:'Tapecon Inc.',loc:'701 Seneca Street, Buffalo, New York 14210',naics:'323 – Printing\n334 – Printed Electronics / Contract Mfg',web:'tapecon.com',desc:'Fifth-generation family-owned contract manufacturer established 1919. Specializes in printed flexible electronics, membrane switches and keypads, EMI/RFI shielding tapes, and disposable medical/industrial devices. ISO 9001:2015, ISO 13485:2016, FDA registered.',note:'Unique capability: printed flexible electronics, membrane switches, and EMI shielding materials — all components NAC\'s IoT and handheld devices need. Their 5-generation family ownership makes them a relationship-first company — approachable. Supplier for custom interface overlays and keypad assemblies.',rels:['supplier','partner']},
+{id:'zaxis',region:'US',tier:1,name:'Z-AXIS Manufacturing',loc:'Western New York, USA',naics:'334 – Electronic Contract Manufacturing',web:'zaxis.net',desc:'Electronic contract manufacturer serving the Western New York region offering SMT, THT, and mixed PCBA solutions. Provides small and large production volumes. Legacy advanced manufacturer of the region.',note:'Local PCBA competitor and potential subcontract partner. For overflow production or specialized processes NAC doesn\'t yet have in-house, Z-AXIS is a logical subcontract destination. Study their pricing to understand the competitive baseline in the Buffalo market.',rels:['partner']},
+// ── USA T2
+{id:'hbp',region:'US',tier:2,priority:'HIGH',name:'Horschel Brothers Precision (HBP)',loc:'Near Buffalo, New York\nISO 9001:2015 — Est. 1984',naics:'332 – Fabricated Metal Product Manufacturing',web:'hbpllc.com',desc:'Family-owned precision machining and contract manufacturing company established 1984. CNC milling and turning with robust automation. Complete turnkey solutions from product development through warehousing. Serves global corporations and startups alike. Post-processing, assembly, and warehousing services included.',note:'Startup-friendly culture with turnkey capability is ideal for NAC\'s prototype and early-production hardware needs. ISO certification means quality documentation compatible with aerospace or medical supply chain. Priority supplier relationship.',rels:['supplier']},
+{id:'modern_tec',region:'US',tier:2,name:'Modern-Tec Manufacturing Inc.',loc:'Lockport, New York (20 min from Niagara Falls NY)\nISO 9001, climate-controlled 11,000 sq ft',naics:'332 – Fabricated Metal Product Manufacturing',web:'moderncnc.com',desc:'Full-service CNC machine shop specializing in precision multi-axis machining. Climate-controlled facility for tight-tolerance work. ISO 9001 certified. Named 2013 and 2015 Small Business of the Year. Participated in University at Buffalo TCIE case study.',note:'Lockport location is NAC\'s geographically closest major U.S. machine shop — directly accessible across the Peace Bridge to Fort Erie. Climate control is critical for tight-tolerance electronics enclosure and connector work.',rels:['supplier']},
+{id:'barton',region:'US',tier:2,name:'Barton Tool',loc:'Buffalo, New York',naics:'332 / 333 – Precision CNC Machining',web:'bartontool.com',desc:'CNC machining services offering precision milling, turning, and heliarc welding for repair of tools and molds. Works with aluminum, stainless steel, brass, and various plastics. Prototype and production capability for small to mid-size regional manufacturers. Fast turnaround emphasis.',note:'Accessible prototype shop for rapid iteration on enclosure and bracket designs. Heliarc welding and mold repair capability useful for fixture repair on the production line.',rels:['supplier']},
+{id:'westfalls',region:'US',tier:2,name:'West Falls Machine Co.',loc:'West Falls, New York (Erie County)',naics:'332 – Fabricated Metal Product Manufacturing',web:'wfmachine.com',desc:'Precision job shop with capacity for very large workpieces. Manual and CNC machines with boring, milling, turning, drilling, sawing, threading, and dynamic balancing. Welding of steel, stainless, aluminum, and cast metals. Turning up to 162 inches long.',note:'Large-capacity shop for production equipment components, structural frames for SMT line support structures, and large custom test fixture bases. Essential for custom production equipment builds.',rels:['supplier']},
+// ── USA T3
+{id:'sealing',region:'US',tier:3,name:'Sealing Devices Inc.',loc:'Lancaster, New York (Erie County, Buffalo metro)',naics:'326 – Plastics & Rubber Products Manufacturing',web:'sealingdevices.com',desc:'Manufacturer and fabricator of gaskets, O-rings, seals, adhesives and sealants, vents, and injection/compression/transfer-molded rubber parts. Longstanding Erie County manufacturer. Member of the Buffalo Niagara Manufacturing Alliance.',note:'Critical supplier for IP-rated sealing on NAC\'s handheld and field-deployed industrial IoT products. Open a supplier account early — local presence means short lead times and no cross-border customs friction for U.S.-side operations.',rels:['supplier']},
+// ── USA T4
+{id:'eastman',region:'US',tier:4,name:'Eastman Machine Company',loc:'Washington Street, Downtown Buffalo (~200 employees)',naics:'333 – Machinery Manufacturing',web:'eastmancuts.com',desc:'Buffalo legacy manufacturer, 100+ years. Designs and manufactures precision cutting machines for industrial and technical textile applications. CNC-controlled cutting systems, conveyor cutters, and automated material handling equipment.',note:'Indirect relevance — Eastman\'s precision CNC cutting can produce flat-cut components (gaskets, EMI shielding sheets, custom die-cut materials) relevant to electronics production. Their supply chain and workforce is part of the same ecosystem NAC draws from.',rels:['partner']},
+{id:'bmw',region:'US',tier:4,name:'Buffalo Manufacturing Works',loc:'683 Northland Avenue, Buffalo, New York\n(co-located with Northland WTC)',naics:'541 / 333 – Manufacturing Innovation Center / WNY MEP',web:'',desc:'Applied research and manufacturing innovation center part of the MEP (Manufacturing Extension Partnership) network — the WNY Manufacturing Extension Partnership hub. Provides process improvement, digital manufacturing, quality systems, and advanced manufacturing technology adoption for regional SMEs.',note:'NAC\'s primary applied manufacturing technology resource on the U.S. side. BMW provides process engineering support, lean manufacturing coaching, quality systems development (ISO 9001 prep), and connections to Empire State Development grants.',rels:['partner','gov']},
+// ── USA T5
+{id:'moog',region:'US',tier:5,priority:'HIGH',name:'Moog Inc.',loc:'East Aurora, New York — NYSE: MOG.A\n3,500+ WNY employees — 2025 BNP Business of the Year',naics:'3728 / 334 / 335 – Precision Electronic Control Systems',web:'moog.com',desc:'Worldwide designer, manufacturer, and systems integrator of high-performance precision motion and fluid control systems. Products span military/commercial aircraft, satellites, defense systems, industrial machinery (injection molding, metal forming), marine, and medical equipment. Operates F-35, V-22 Osprey, and NASA programs. 350-acre campus, 1M+ sq ft. $25M expansion 2025 creating 500+ new jobs.',note:'The premier OEM target for NAC in the entire cross-border region. Moog\'s supply chain for control electronics, test equipment, and electromechanical assemblies is enormous. NAC\'s firmware optimization capability is directly relevant to their embedded control system supply chain. Long-term aspiration: qualify as a Moog supplier.',rels:['client']},
+{id:'graham',region:'US',tier:5,name:'Graham Corporation',loc:'Batavia, New York (~45 min from Buffalo)\nNYSE: GHM — ~600 employees',naics:'332 / 3559 – Defense & Energy Equipment Mfg',web:'grahaminc.com',desc:'Public company designing and manufacturing energy and defense equipment including vacuum and heat transfer systems, cryogenic equipment, and defense components for the U.S. Navy submarine program and energy industry.',note:'Defense electronics supply chain anchor. Their submarine propulsion work requires extremely high-reliability embedded electronics, test equipment, and precision assembly. NAC\'s firmware optimization and custom ATE capabilities are directly relevant. ITAR and AS9100 certification opens this door — a longer-term target.',rels:['client']},
+{id:'plugpower',region:'US',tier:5,name:'Plug Power Inc.',loc:'WNY STAMP, Alabama, New York (Genesee County)\nNASDAQ: PLUG',naics:'335 / 221 – Clean Energy & Fuel Cells',web:'plugpower.com',desc:'Green hydrogen fuel cell technology company. WNY facility produces 45 metric tons of green liquid hydrogen daily using 120 MW PEM electrolyzers powered by Niagara hydroelectricity. Builds end-to-end hydrogen ecosystem for heavy freight and distributed power systems.',note:'Clean energy industrial IoT client prospect. Plug Power\'s hydrogen production facilities are instrumented environments requiring embedded sensors, edge computing devices, and custom control electronics for monitoring electrolyzers and fuel cell stacks. NAC\'s low-power firmware expertise is directly applicable.',rels:['client']},
+{id:'newflyer',region:'US',tier:5,name:'New Flyer Industries',loc:'Buffalo, New York (North American manufacturing network)',naics:'336 / 335 – Transit Vehicle Manufacturing',web:'newflyer.com',desc:'North America\'s largest transit bus and motor coach manufacturer. Produces electric, hydrogen fuel cell, CNG, diesel, and hybrid transit vehicles. Vehicles heavily instrumented with embedded control systems, power electronics, battery management systems, and telematics hardware.',note:'Major embedded electronics OEM target. New Flyer\'s EV transit vehicles demand sophisticated power electronics, BMS firmware, CAN bus control systems, and telematics. NAC\'s firmware optimization for power-efficient embedded systems aligns with EV powertrain control requirements.',rels:['client']},
+// ── USA T6
+{id:'insyte',region:'US',tier:6,name:'Insyte Consulting / WNY MEP',loc:'683 Northland Avenue, Buffalo, New York',naics:'541 – Professional, Scientific & Technical Services',web:'insyte-ced.com',desc:'The Western New York Manufacturing Extension Partnership (MEP) center. Provides lean manufacturing, quality systems (ISO), process improvement, workforce training coordination, and business development support to SME manufacturers across WNY. Part of the national NIST MEP network.',note:'NAC\'s U.S.-side manufacturing advisor. MEP centers exist specifically to help small and mid-size manufacturers improve operations and access resources. Insyte can facilitate NYS grant applications, ISO certification prep, and connections to the WNY manufacturer network.',rels:['partner','gov']},
+{id:'materion',region:'US',tier:6,name:'Materion Corporation',loc:'Buffalo, New York — NYSE: MTRN',naics:'331 / 334 – Advanced Materials & Electronic Components',web:'materion.com',desc:'Specializes in advanced materials for high-reliability applications. Products include beryllium-copper alloys, specialty coatings, precious metal materials, and engineered material systems for electronics, defense, aerospace, semiconductor manufacturing, and telecommunications.',note:'Specialty materials supplier for advanced electronics. Beryllium-copper for high-performance electrical contacts, spring-loaded connectors, and precision electrical components. As NAC moves into defense-grade electronics, Materion\'s materials become relevant.',rels:['supplier']},
+// ── USA T7
+{id:'nypa',region:'US',tier:7,name:'NYPA — Niagara Power Project',loc:'5777 Lewiston Road, Lewiston, New York 14092',naics:'221 – Electric Power Generation',web:'nypa.gov',desc:'Operates the Robert Moses Niagara Power Plant — 25 turbines, 2.5 GW, 19% of NY State\'s entire grid. Provides low-cost power allocations to qualified manufacturers. Funded $15M into Northland Workforce Training Center. Rates 40–60% below market for qualifying industries.',note:'The region\'s most powerful economic development instrument. NYPA hydropower allocations available to manufacturers that create or retain jobs in Niagara County and WNY. Electronics manufacturing energy loads on reflow ovens and environmental controls are significant — NYPA rates dramatically reduce this cost.',rels:['gov']},
+{id:'nat_fuel',region:'US',tier:7,name:'National Fuel Gas / National Grid',loc:'Buffalo, New York (regional utilities serving all 8 WNY counties)',naics:'221 – Natural Gas Distribution / Electric Transmission',web:'nationalgrid.com',desc:'National Fuel Gas provides natural gas distribution to WNY manufacturing facilities. National Grid provides electrical distribution in areas outside NYPA\'s direct service area. Commercial and industrial rate programs available.',note:'Facility utility relationships for any U.S. operations outside NYPA\'s direct service area. Commercial account establishment is standard procedure — engage their business development teams early in any U.S. facility planning.',rels:['gov']},
+{id:'niag_ced',region:'US',tier:7,name:'Niagara County Center for Economic Development',loc:'Niagara County, New York',naics:'912 – Regional Economic Development',web:'niagaracountybusiness.com',desc:'Administers Niagara County\'s low-cost power program (via Empower Niagara). Also administers revolving loan funds, industrial revenue bonds, Opportunity Zone tax incentives, and MWBE lending programs. Connects manufacturers to WorkSourceOne for workforce recruitment.',note:'The gateway to NYPA low-cost power for any Niagara County U.S. operations. Their Empower Niagara program qualifies manufacturers for power allocations that can reduce electricity costs 40–60%. Start the application before signing any Lockport or Niagara Falls NY lease.',rels:['gov']},
+// ── USA T8
+{id:'crossborder',region:'US',tier:8,name:'Peace Bridge / Lewiston-Queenston Crossings',loc:'Fort Erie–Buffalo (Peace Bridge)\nQueenston, ON — Lewiston, NY (Lewiston-Queenston)',naics:'488 – Support Activities for Transportation',web:'cbp.gov',desc:'Two international bridge crossings connecting Fort Erie–Niagara to WNY. The Peace Bridge handles major commercial truck traffic. Lewiston-Queenston connects to Niagara County\'s industrial zone. NEXUS/FAST commercial lanes for pre-cleared trusted traders. Electronics assembled in Canada cross duty-free under CUSMA (USMCA) when meeting rules-of-origin requirements.',note:'Core operational advantage of the Fort Erie location. Electronics components meeting 60%+ North American content cross duty-free into the U.S. This is a structural competitive advantage versus purely U.S.-based competitors. Establish bonded carrier and customs broker relationships on both sides of the border.',rels:['partner']},
+// ── USA T9
+{id:'ub',region:'US',tier:9,name:'University at Buffalo (SUNY)',loc:'Buffalo, New York 14260 — R1 Research University',naics:'611 – Educational Services',web:'buffalo.edu',desc:'NY State\'s flagship public university. Engineering programs: Electrical Engineering, Computer Science, Computer Engineering, Mechanical Engineering. Active embedded systems, IoT, semiconductor, and RF/wireless research. UB TCIE provides manufacturing process consulting. CEL entrepreneurship program (Sparcz Engineering founder is a 2016 CEL graduate).',note:'NAC\'s primary U.S.-side university research partner. Key access: CEL entrepreneurship mentorship, MITACS grants (Canadian government funding for research with U.S. university partners), engineering co-op placements, and START-UP NY — qualifying companies get 10-year tax abatement near SUNY campuses.',rels:['edu','partner','gov']},
+{id:'nwtc',region:'US',tier:9,name:'Northland Workforce Training Center',loc:'683 Northland Avenue, Buffalo, New York 14211\n(Former Clearing Niagara Plant — 240,000 sq ft)',naics:'611 – Educational Services',web:'northlandwtc.org',desc:'Premier advanced manufacturing workforce training facility. Funded by $70M+ in NYS grants ($29M Buffalo Billion + $15M NYPA). Delivers for-credit programs in CNC machining, mechatronics, electrical construction, and welding through SUNY Alfred State and SUNY Erie. Co-op, apprenticeship, and internship placements. BNMA is primary operator.',note:'Direct U.S. equivalent of Niagara College\'s role in Ontario. Register as an employer for co-op and internship placements. Their mechatronics and electrical technology programs produce exactly the technician profile needed for SMT assembly, test, and rework roles.',rels:['edu','partner']},
+{id:'suny_erie',region:'US',tier:9,name:'SUNY Erie Community College',loc:'Buffalo / Williamsville / Orchard Park, New York',naics:'611 – Educational Services',web:'sunyerie.edu',desc:'Community college delivering core technical training curricula at the Northland Workforce Training Center. Programs include mechatronics, electrical technology, computer information systems, and engineering technology.',note:'Practical workforce pipeline for production technician roles. SUNY Erie graduates are direct hires for assembly, test, and quality control positions. A single employer relationship with Northland automatically creates access to SUNY Erie\'s student pipeline.',rels:['edu']},
+// ── USA T10
+{id:'bnma',region:'US',tier:10,name:'Buffalo Niagara Manufacturing Alliance',loc:'Buffalo, New York',naics:'813 – Professional & Industry Organizations',web:'bnmalliance.com',desc:'Primary membership association for manufacturers in Greater Buffalo–Niagara. Operates Northland Workforce Training Center as a primary operator. Hosts networking events, manufacturing summits, and advocacy. Sparcz Engineering Inc. is a listed member.',note:'Join BNMA as NAC\'s first cross-border organizational relationship. The member directory is your complete WNY target list. BNMA events connect NAC to the Northland workforce pipeline and Invest Buffalo Niagara\'s economic development team.',rels:['partner','gov']},
+{id:'invest_buf',region:'US',tier:10,priority:'HIGH',name:'Invest Buffalo Niagara',loc:'257 W. Genesee Street, Buffalo, NY 14202\n1-800-916-9073',naics:'813 – Economic Development Organization',web:'buffaloniagara.org',desc:'Nonprofit regional economic development organization representing 8 WNY counties. Has helped nearly 150 manufacturing companies expand or relocate to WNY. Provides site location assistance, incentive application facilitation. Programs: START-UP NY, Excelsior Jobs Tax Credits, IDA Tax Abatements, NYPA Hydropower Allocations.',note:'NAC\'s first call on the U.S. side. Operates confidentially — won\'t disclose your interest to competitors while helping evaluate sites, incentives, and workforce. Their facilitation of NYPA allocations, START-UP NY applications, and IDA abatements can materially reduce the effective cost of any U.S. facility. Book a consultation before any real estate commitment.',rels:['gov','partner']},
+{id:'bnp',region:'US',tier:10,name:'Buffalo Niagara Partnership',loc:'257 W. Genesee Street, Buffalo, New York 14202',naics:'813 – Chamber of Commerce',web:'thepartnership.org',desc:'Regional chamber of commerce for greater Buffalo–Niagara business community. Hosts networking events, advocacy, and connections across all industry sectors. Recognized Moog Inc. as their 2025 Business of the Year.',note:'Complementary to BNMA, covering a broader business community. Membership signals commitment to the WNY market and provides access to peer CEO networks and professional services firms needed to establish a U.S. entity.',rels:['partner']},
+{id:'esd',region:'US',tier:10,name:'Empire State Development',loc:'Buffalo Regional Office — 633 Third Avenue, NY',naics:'912 – State Economic Development Agency',web:'esd.ny.gov',desc:'NY State\'s primary economic development arm. Administers: 0% state corporate income tax for manufacturers, START-UP NY (10-year tax abatement near SUNY campuses), Excelsior Jobs Tax Credits (up to $10K per job), 50% credit on workforce training, 5% refundable capital investment tax credit, 0% inventory tax, 0% sales tax on machinery. Designated Buffalo–Rochester–Syracuse as Upstate Tech Hub ($40M federal EDA award).',note:'ESD programs stack: 0% corporate tax + Excelsior credits + START-UP NY abatement + capital investment tax credit can collectively eliminate most U.S. tax obligations in the early years. Engage alongside Invest Buffalo Niagara.',rels:['gov']},
+{id:'fuzehub',region:'US',tier:10,name:'FuzeHub — NY Manufacturing Innovation Hub',loc:'New York State (statewide, WNY reach)',naics:'541 / 813 – Manufacturing Innovation Hub',web:'fuzehub.com',desc:'New York State\'s nonprofit MEP intermediary. Administers the Manufacturers\' Matching Fund — grants up to $50K for SME manufacturers to adopt technology or solve production problems with university or service provider partners. Hosts NY State Innovation Summit.',note:'Grants program for technology adoption. NAC\'s firmware development tooling, production automation investments, and proprietary test equipment development are all potential candidates for FuzeHub Manufacturers\' Matching Fund grants up to $50K. Requires a NY State entity.',rels:['gov']}
+];
+
+// ═══════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════
+let activeReg = 'all';
+let activeTiers = new Set([1,2,3,4,5,6,7,8,9,10]);
+let activeRels = new Set(['client','supplier','partner','acq','edu','gov']);
+let srchQ = '';
+let selId = null;
+
+// ═══════════════════════════════════════
+// FILTER
+// ═══════════════════════════════════════
+function getFiltered(){
+  return NODES.filter(n=>{
+    if(activeReg!=='all' && n.region!==activeReg) return false;
+    if(!activeTiers.has(n.tier)) return false;
+    if(!n.rels.some(r=>activeRels.has(r))) return false;
+    if(srchQ){
+      const q=srchQ.toLowerCase();
+      return n.name.toLowerCase().includes(q)||n.loc.toLowerCase().includes(q)||
+             n.desc.toLowerCase().includes(q)||n.naics.toLowerCase().includes(q)||
+             (n.note&&n.note.toLowerCase().includes(q));
+    }
+    return true;
+  });
+}
+
+// ═══════════════════════════════════════
+// BUILD SIDEBAR TIERS
+// ═══════════════════════════════════════
+function buildTiers(){
+  const el=document.getElementById('tierList');
+  for(let t=1;t<=10;t++){
+    const b=document.createElement('button');
+    b.className='tbtn act'; b.dataset.t=t;
+    b.innerHTML=`<span class="tnum" style="background:${TC[t]}22;color:${TC[t]};border:1px solid ${TC[t]}33">${t}</span><span class="tlbl">${TL[t]}</span><span class="tcnt" id="tc${t}">0</span>`;
+    b.onclick=()=>toggleTier(t,b);
+    el.appendChild(b);
+  }
+}
+
+function toggleTier(t,b){
+  if(activeTiers.has(t)){activeTiers.delete(t);b.classList.remove('act');}
+  else{activeTiers.add(t);b.classList.add('act');}
+  refresh();
+}
+
+function setReg(r,b){
+  activeReg=r;
+  document.querySelectorAll('.rbtn').forEach(x=>{x.className='rbtn';});
+  if(r==='all')b.classList.add('a-all');
+  else if(r==='ON')b.classList.add('a-on');
+  else b.classList.add('a-us');
+  refresh();
+}
+
+function toggleR(b){
+  const r=b.dataset.r;
+  if(activeRels.has(r)){activeRels.delete(r);b.classList.remove('act');}
+  else{activeRels.add(r);b.classList.add('act');}
+  refresh();
+}
+
+document.getElementById('srchInp').addEventListener('input',e=>{srchQ=e.target.value;refresh();});
+
+// ═══════════════════════════════════════
+// STATS & LIST
+// ═══════════════════════════════════════
+function updateStats(f){
+  document.getElementById('cON').textContent=f.filter(n=>n.region==='ON').length;
+  document.getElementById('cUS').textContent=f.filter(n=>n.region==='US').length;
+  document.getElementById('cAL').textContent=f.length;
+  document.getElementById('cvCnt').textContent=`${f.length} of ${NODES.length} nodes visible`;
+  for(let t=1;t<=10;t++){
+    const el=document.getElementById(`tc${t}`);
+    if(el) el.textContent=f.filter(n=>n.tier===t).length;
+  }
+}
+
+function renderList(f){
+  const el=document.getElementById('nodeList');
+  if(!f.length){el.innerHTML='<div class="no-res">NO NODES MATCH<br>current filters</div>';return;}
+  el.innerHTML=f.map(n=>`
+    <div class="ncard ${n.region==='ON'?'ron':'rus'}${selId===n.id?' sel':''}" onclick="selectNode('${n.id}')">
+      <div class="nn">${n.name}</div>
+      <div class="nl">${n.loc.split('\n')[0]}</div>
+      <div class="nt">
+        <span class="tag" style="background:${n.region==='ON'?'rgba(0,201,167,.15)':'rgba(245,166,35,.12)'};color:${n.region==='ON'?'var(--on)':'var(--us)'};border-color:${n.region==='ON'?'rgba(0,201,167,.3)':'rgba(245,166,35,.25)'}">${n.region==='ON'?'🍁':'🦅'} ${n.region}</span>
+        <span class="tag" style="background:${TC[n.tier]}15;color:${TC[n.tier]};border-color:${TC[n.tier]}33">T${n.tier}</span>
+        ${n.rels.slice(0,2).map(r=>`<span class="tag" style="background:${RC[r]}12;color:${RC[r]};border-color:${RC[r]}33">${r}</span>`).join('')}
+        ${n.priority?`<span class="tag" style="background:rgba(255,77,136,.15);color:#ff4d88;border-color:rgba(255,77,136,.3)">${n.priority==='ACQ'?'🎯 ACQ':'★ HI'}</span>`:''}
+      </div>
+    </div>`).join('');
+}
+
+// ═══════════════════════════════════════
+// CANVAS
+// ═══════════════════════════════════════
+const cvs=document.getElementById('cvs');
+const ctx=cvs.getContext('2d');
+let posNodes=[];
+let scale=1,panX=0,panY=0;
+let dragging=false,lastX=0,lastY=0,dragMoved=false;
+let hovered=null;
+
+function resize(){
+  const a=cvs.parentElement;
+  cvs.width=a.clientWidth; cvs.height=a.clientHeight;
+  layout(getFiltered()); draw();
+}
+
+function layout(f){
+  const W=cvs.width, H=cvs.height;
+  const cx=W/2, cy=H/2;
+  const onNodes=f.filter(n=>n.region==='ON');
+  const usNodes=f.filter(n=>n.region==='US');
+
+  function place(group, side){
+    const byT={};
+    group.forEach(n=>{if(!byT[n.tier])byT[n.tier]=[];byT[n.tier].push(n);});
+    const tiers=Object.keys(byT).map(Number).sort((a,b)=>a-b);
+    const maxR=Math.min(W,H)*0.41;
+    const minR=90;
+    tiers.forEach((t,ti)=>{
+      const r=minR+(maxR-minR)*(ti/Math.max(tiers.length-1,1));
+      const ns=byT[t];
+      // ON = left semicircle, US = right semicircle
+      const startA=side==='ON'?Math.PI*0.55:Math.PI*-0.45;
+      const endA=  side==='ON'?Math.PI*1.45:Math.PI*0.45;
+      const arc=endA-startA;
+      ns.forEach((n,ni)=>{
+        const frac=ns.length>1?ni/(ns.length-1):0.5;
+        const ang=startA+frac*arc;
+        n._x=cx+Math.cos(ang)*r;
+        n._y=cy+Math.sin(ang)*r;
+        n._r=n.tier<=1?15:(n.tier<=3?12:(n.tier<=5?13:10));
+        if(n.priority)n._r+=3;
+      });
+    });
+  }
+  place(onNodes,'ON'); place(usNodes,'US');
+  posNodes=f;
+}
+
+function w2s(wx,wy){
+  const cx=cvs.width/2,cy=cvs.height/2;
+  return [(wx-cx)*scale+cx+panX,(wy-cy)*scale+cy+panY];
+}
+function s2w(sx,sy){
+  const cx=cvs.width/2,cy=cvs.height/2;
+  return [(sx-cx-panX)/scale+cx,(sy-cy-panY)/scale+cy];
+}
+
+function draw(){
+  ctx.clearRect(0,0,cvs.width,cvs.height);
+  // subtle grid
+  ctx.save();
+  ctx.strokeStyle='rgba(30,45,70,0.4)';
+  ctx.lineWidth=1;
+  const gs=40*scale;
+  const ox=(panX%gs+gs)%gs, oy=(panY%gs+gs)%gs;
+  for(let x=ox;x<cvs.width;x+=gs){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,cvs.height);ctx.stroke();}
+  for(let y=oy;y<cvs.height;y+=gs){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(cvs.width,y);ctx.stroke();}
+  ctx.restore();
+
+  // divider
+  const [dx]=w2s(cvs.width/2,0);
+  ctx.save();ctx.setLineDash([5,6]);ctx.strokeStyle='rgba(50,70,110,0.35)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(dx,0);ctx.lineTo(dx,cvs.height);ctx.stroke();ctx.restore();
+
+  // region labels
+  const [lON]=w2s(cvs.width*0.28,0);
+  const [lUS]=w2s(cvs.width*0.72,0);
+  ctx.font=`bold 11px Inconsolata,monospace`;ctx.textAlign='center';ctx.textBaseline='top';
+  ctx.fillStyle='rgba(0,201,167,0.35)';ctx.fillText('🍁 ONTARIO, CANADA',lON,16);
+  ctx.fillStyle='rgba(245,166,35,0.35)';ctx.fillText('🦅 WESTERN NEW YORK, USA',lUS,16);
+
+  // NAC center
+  const [ncx,ncy]=w2s(cvs.width/2,cvs.height/2);
+  const gr=ctx.createRadialGradient(ncx,ncy,0,ncx,ncy,28);
+  gr.addColorStop(0,'#1a4a80');gr.addColorStop(1,'#0d2545');
+  ctx.beginPath();ctx.arc(ncx,ncy,26,0,Math.PI*2);
+  ctx.fillStyle=gr;ctx.fill();
+  ctx.strokeStyle='#4e9af1';ctx.lineWidth=2;ctx.stroke();
+  ctx.fillStyle='#e8edf8';
+  ctx.font=`bold ${Math.max(9,11*scale)}px Barlow Condensed,sans-serif`;
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText('NAC',ncx,ncy);
+
+  // connection lines
+  posNodes.forEach(n=>{
+    const [sx,sy]=w2s(n._x,n._y);
+    const isHov=n.id===hovered, isSel=n.id===selId;
+    const baseA=isHov?0.5:(isSel?0.55:0.1);
+    const col=n.region==='ON'?`rgba(0,201,167,${baseA})`:`rgba(245,166,35,${baseA})`;
+    ctx.beginPath();ctx.moveTo(ncx,ncy);ctx.lineTo(sx,sy);
+    ctx.strokeStyle=col;ctx.lineWidth=isSel?2:1;ctx.setLineDash([]);ctx.stroke();
+  });
+
+  // nodes
+  posNodes.forEach(n=>{
+    const [sx,sy]=w2s(n._x,n._y);
+    const r=n._r*Math.max(0.55,scale);
+    const isHov=n.id===hovered, isSel=n.id===selId;
+
+    if(isHov||isSel){
+      const g2=ctx.createRadialGradient(sx,sy,r,sx,sy,r*2.8);
+      g2.addColorStop(0,TC[n.tier]+'33');g2.addColorStop(1,TC[n.tier]+'00');
+      ctx.beginPath();ctx.arc(sx,sy,r*2.8,0,Math.PI*2);ctx.fillStyle=g2;ctx.fill();
+    }
+
+    ctx.beginPath();ctx.arc(sx,sy,r,0,Math.PI*2);
+    ctx.fillStyle=isSel?TC[n.tier]:TC[n.tier]+'bb';ctx.fill();
+    ctx.strokeStyle=isSel?'#fff':TC[n.tier];ctx.lineWidth=isSel?2:1.5;ctx.stroke();
+
+    // region indicator dot
+    const dc=n.region==='ON'?'#00c9a7':'#f5a623';
+    ctx.beginPath();ctx.arc(sx+r*0.55,sy-r*0.55,r*0.3,0,Math.PI*2);
+    ctx.fillStyle=dc;ctx.fill();
+
+    // priority star
+    if(n.priority){
+      ctx.beginPath();ctx.arc(sx-r*0.55,sy-r*0.55,r*0.3,0,Math.PI*2);
+      ctx.fillStyle=n.priority==='ACQ'?'#ff4d88':'#ffd166';ctx.fill();
+    }
+
+    // label
+    if(scale>0.55||isHov||isSel){
+      ctx.fillStyle=isHov||isSel?'#e8edf8':'#4d6a8a';
+      ctx.font=`${Math.max(7,9*scale)}px Inconsolata,monospace`;
+      ctx.textAlign='center';ctx.textBaseline='top';
+      const short=n.name.length>22?n.name.substring(0,21)+'…':n.name;
+      ctx.fillText(short,sx,sy+r+3);
+    }
+  });
+}
+
+// ── Canvas interaction
+cvs.addEventListener('mousedown',e=>{dragging=true;dragMoved=false;lastX=e.clientX;lastY=e.clientY;});
+cvs.addEventListener('mousemove',e=>{
+  if(dragging){
+    const dx=e.clientX-lastX, dy=e.clientY-lastY;
+    if(Math.abs(dx)+Math.abs(dy)>3)dragMoved=true;
+    panX+=dx;panY+=dy;lastX=e.clientX;lastY=e.clientY;draw();return;
+  }
+  const rect=cvs.getBoundingClientRect();
+  const mx=e.clientX-rect.left, my=e.clientY-rect.top;
+  const [wx,wy]=s2w(mx,my);
+  let found=null;
+  posNodes.forEach(n=>{
+    const d=Math.sqrt((n._x-wx)**2+(n._y-wy)**2);
+    if(d<n._r/scale*1.5)found=n.id;
+  });
+  if(found!==hovered){hovered=found;draw();}
+  const tip=document.getElementById('tip');
+  if(found){
+    const n=NODES.find(x=>x.id===found);
+    document.getElementById('tipN').textContent=n.name;
+    document.getElementById('tipL').textContent=n.loc.split('\n')[0];
+    document.getElementById('tipT').textContent=`Tier ${n.tier} — ${TL[n.tier]} · ${n.region==='ON'?'Ontario CA':'WNY USA'}`;
+    tip.style.left=(e.clientX+14)+'px';tip.style.top=(e.clientY-10)+'px';
+    tip.classList.add('vis');
+  } else {
+    tip.classList.remove('vis');
+  }
+});
+cvs.addEventListener('mouseup',e=>{
+  if(!dragMoved){
+    const rect=cvs.getBoundingClientRect();
+    const [wx,wy]=s2w(e.clientX-rect.left,e.clientY-rect.top);
+    let hit=null;
+    posNodes.forEach(n=>{
+      const d=Math.sqrt((n._x-wx)**2+(n._y-wy)**2);
+      if(d<n._r/scale*1.8)hit=n.id;
+    });
+    if(hit)selectNode(hit);
+    else if(selId&&!hit){closeDetail();}
+  }
+  dragging=false;
+});
+cvs.addEventListener('mouseleave',()=>{hovered=null;document.getElementById('tip').classList.remove('vis');draw();});
+cvs.addEventListener('wheel',e=>{
+  e.preventDefault();
+  const f=e.deltaY>0?0.88:1.12;
+  scale=Math.min(4,Math.max(0.25,scale*f));draw();
+},{passive:false});
+
+function doZoom(f){scale=Math.min(4,Math.max(0.25,scale*f));draw();}
+function resetView(){scale=1;panX=0;panY=0;draw();}
+
+// ═══════════════════════════════════════
+// DETAIL PANEL
+// ═══════════════════════════════════════
+function selectNode(id){
+  selId=id;
+  const n=NODES.find(x=>x.id===id);
+  if(!n)return;
+
+  const reg=document.getElementById('dpReg');
+  reg.className='dp-reg '+(n.region==='ON'?'on':'us');
+  reg.textContent=n.region==='ON'?'🍁 Ontario, Canada':'🦅 Western New York, USA';
+
+  document.getElementById('dpNm').textContent=n.name;
+  document.getElementById('dpLc').textContent=n.loc;
+  document.getElementById('dpTr').innerHTML=`<span style="color:${TC[n.tier]}">●</span> Tier ${n.tier} — ${TL[n.tier]}`;
+  document.getElementById('dpNa').textContent=n.naics;
+  document.getElementById('dpDc').textContent=n.desc;
+  document.getElementById('dpNt').textContent=n.note||'';
+
+  const wb=document.getElementById('dpWb');
+  if(n.web){
+    wb.href=`https://${n.web}`;
+    document.getElementById('dpWbT').textContent=n.web;
+    wb.style.display='inline-flex';
+  } else {wb.style.display='none';}
+
+  document.getElementById('dpRl').innerHTML=n.rels.map(r=>
+    `<span class="dp-rc" style="color:${RC[r]};border-color:${RC[r]}55">${r.toUpperCase()}</span>`
+  ).join('');
+
+  const pr=document.getElementById('dpPr');
+  if(n.priority){
+    document.getElementById('dpPrT').textContent=
+      n.priority==='ACQ'?'Acquisition Target — assess succession planning situation':'High Priority — contact in first 90 days of operation';
+    pr.style.display='flex';
+  } else {pr.style.display='none';}
+
+  document.getElementById('detail').classList.add('open');
+  document.getElementById('leg').classList.add('shifted');
+  renderList(getFiltered());
+  draw();
+}
+
+function closeDetail(){
+  selId=null;
+  document.getElementById('detail').classList.remove('open');
+  document.getElementById('leg').classList.remove('shifted');
+  renderList(getFiltered());draw();
+}
+
+// ═══════════════════════════════════════
+// MAIN REFRESH
+// ═══════════════════════════════════════
+function refresh(){
+  const f=getFiltered();
+  updateStats(f);renderList(f);layout(f);draw();
+}
+
+// ═══════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════
+buildTiers();
+window.addEventListener('resize',resize);
+setTimeout(()=>{resize();refresh();},120);
+</script>
+</div>

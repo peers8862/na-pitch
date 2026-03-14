@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Babb Works — Facility Roadmap & Timeline</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif&family=DM+Sans:wght@300;400;500;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --steel: #1a2332;
+    --forge-orange: #d35400;
+    --forge-amber: #e67e22;
+    --circuit-blue: #2e86de;
+    --circuit-teal: #0abde3;
+    --cream: #faf8f5;
+  }
+
+  body {
+    background: var(--steel);
+    font-family: 'DM Sans', sans-serif;
+    color: #e8e2d8;
+  }
+
+  .canvas {
+    width: 1200px;
+    min-height: 900px;
+    margin: 0 auto;
+    position: relative;
+    padding: 48px 56px;
+    background: linear-gradient(170deg, #1a2332 0%, #0f1922 50%, #162030 100%);
+    overflow: hidden;
+  }
+
+  .canvas::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: 
+      radial-gradient(ellipse 700px 500px at 15% 80%, rgba(211,84,0,0.04) 0%, transparent 60%),
+      radial-gradient(ellipse 700px 400px at 85% 20%, rgba(46,134,222,0.05) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .grid-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: 
+      linear-gradient(rgba(46,134,222,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(46,134,222,0.025) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+  }
+
+  .header {
+    position: relative; z-index: 2;
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 36px; padding-bottom: 20px;
+    border-bottom: 1px solid rgba(211,84,0,0.3);
+  }
+
+  .brand { display: flex; flex-direction: column; gap: 4px; }
+  .brand-name { font-family: 'Instrument Serif', serif; font-size: 38px; color: var(--cream); letter-spacing: 2px; line-height: 1; }
+  .brand-tag { font-size: 11px; text-transform: uppercase; letter-spacing: 4px; color: var(--forge-orange); font-weight: 500; }
+  .doc-label { text-align: right; font-size: 11px; text-transform: uppercase; letter-spacing: 3px; color: rgba(232,226,216,0.4); line-height: 1.8; }
+  .doc-label span { display: block; color: var(--circuit-teal); font-weight: 600; }
+
+  /* FLOOR PLAN SECTION */
+  .section-title { position: relative; z-index: 2; font-family: 'Instrument Serif', serif; font-size: 26px; color: var(--cream); margin-bottom: 6px; }
+  .section-subtitle { font-size: 13px; color: rgba(232,226,216,0.45); margin-bottom: 24px; font-weight: 300; }
+
+  .phases-grid {
+    position: relative; z-index: 2;
+    display: grid;
+    grid-template-columns: 4fr 5fr;
+    gap: 24px;
+    margin-bottom: 36px;
+  }
+
+  .phase-box {
+    background: rgba(255,255,255,0.025);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .phase-box::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    border-radius: 12px 12px 0 0;
+  }
+
+  .phase-box.p1::before { background: linear-gradient(90deg, var(--forge-orange), var(--forge-amber)); }
+  .phase-box.p2::before { background: linear-gradient(90deg, var(--circuit-blue), var(--circuit-teal)); }
+
+  .phase-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .phase-box.p1 .phase-label { color: var(--forge-amber); }
+  .phase-box.p2 .phase-label { color: var(--circuit-teal); }
+
+  .phase-area-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: 20px;
+    color: var(--cream);
+    margin-bottom: 16px;
+  }
+
+  .phase-area-value {
+    font-family: 'Instrument Serif', serif;
+    font-size: 32px;
+    margin-bottom: 4px;
+  }
+
+  .phase-box.p1 .phase-area-value { color: var(--forge-amber); }
+  .phase-box.p2 .phase-area-value { color: var(--circuit-teal); }
+
+  .phase-area-label {
+    font-size: 11px;
+    color: rgba(232,226,216,0.4);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 18px;
+  }
+
+  /* Floor plan visual */
+  .floorplan {
+    display: grid;
+    gap: 4px;
+    margin-bottom: 0;
+  }
+
+  .p1 .floorplan {
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(3, 44px);
+  }
+
+  .p2 .floorplan {
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(3, 44px);
+  }
+
+  .zone {
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9.5px;
+    font-weight: 500;
+    text-align: center;
+    letter-spacing: 0.3px;
+    line-height: 1.2;
+    padding: 4px;
+    transition: all 0.3s ease;
+    cursor: default;
+  }
+
+  .zone:hover { transform: scale(1.03); }
+
+  /* Phase 1 zones */
+  .z-assembly { background: rgba(211,84,0,0.2); border: 1px solid rgba(211,84,0,0.35); color: var(--forge-amber); grid-column: span 2; grid-row: span 2; }
+  .z-testing { background: rgba(46,134,222,0.15); border: 1px solid rgba(46,134,222,0.3); color: var(--circuit-teal); grid-column: span 2; }
+  .z-firmware { background: rgba(108,92,231,0.15); border: 1px solid rgba(108,92,231,0.3); color: #a29bfe; }
+  .z-store { background: rgba(0,184,148,0.12); border: 1px solid rgba(0,184,148,0.3); color: #55efc4; }
+  .z-training { background: rgba(39,174,96,0.15); border: 1px solid rgba(39,174,96,0.3); color: #2ecc71; grid-column: span 2; }
+  .z-office { background: rgba(232,226,216,0.06); border: 1px solid rgba(232,226,216,0.12); color: rgba(232,226,216,0.5); grid-column: span 2; }
+
+  /* Phase 2 zones */
+  .z-smt { background: rgba(211,84,0,0.22); border: 1px solid rgba(211,84,0,0.4); color: var(--forge-amber); grid-column: span 3; grid-row: span 2; font-size: 10px; }
+  .z-test-exp { background: rgba(46,134,222,0.18); border: 1px solid rgba(46,134,222,0.35); color: var(--circuit-teal); grid-column: span 2; }
+  .z-edu-wing { background: rgba(39,174,96,0.18); border: 1px solid rgba(39,174,96,0.35); color: #2ecc71; grid-column: span 2; grid-row: span 2; }
+  .z-proto { background: rgba(108,92,231,0.18); border: 1px solid rgba(108,92,231,0.35); color: #a29bfe; grid-column: span 3; }
+
+  .zone-sqft {
+    display: block;
+    font-size: 8px;
+    opacity: 0.65;
+    margin-top: 2px;
+  }
+
+  /* TIMELINE SECTION */
+  .timeline-section {
+    position: relative; z-index: 2;
+  }
+
+  .timeline-track {
+    position: relative;
+    display: flex;
+    gap: 0;
+    margin-top: 20px;
+  }
+
+  .timeline-bg {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 2px;
+    transform: translateY(-50%);
+    z-index: 0;
+  }
+
+  .timeline-fill {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    height: 4px;
+    border-radius: 2px;
+    transform: translateY(-50%);
+    z-index: 1;
+    background: linear-gradient(90deg, var(--forge-orange) 0%, var(--forge-amber) 40%, var(--circuit-blue) 60%, var(--circuit-teal) 100%);
+  }
+
+  .tl-block {
+    position: relative;
+    z-index: 2;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 4px;
+  }
+
+  .tl-node {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 3px solid;
+    background: var(--steel);
+    position: relative;
+    z-index: 3;
+    margin-bottom: 14px;
+  }
+
+  .tl-block.p1 .tl-node { border-color: var(--forge-amber); }
+  .tl-block.p2 .tl-node { border-color: var(--circuit-teal); }
+  .tl-block.milestone .tl-node {
+    width: 18px; height: 18px;
+    background: var(--forge-amber);
+    border-color: var(--forge-amber);
+    box-shadow: 0 0 12px rgba(211,84,0,0.4);
+  }
+  .tl-block.milestone.p2 .tl-node {
+    background: var(--circuit-teal);
+    border-color: var(--circuit-teal);
+    box-shadow: 0 0 12px rgba(10,189,227,0.4);
+  }
+
+  .tl-content {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 8px;
+    padding: 12px 12px;
+    width: 100%;
+    min-height: 120px;
+  }
+
+  .tl-block.p1 .tl-content { border-top: 2px solid rgba(211,84,0,0.3); }
+  .tl-block.p2 .tl-content { border-top: 2px solid rgba(46,134,222,0.3); }
+
+  .tl-period {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .tl-block.p1 .tl-period { color: var(--forge-amber); }
+  .tl-block.p2 .tl-period { color: var(--circuit-teal); }
+
+  .tl-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: 15px;
+    color: var(--cream);
+    margin-bottom: 8px;
+    line-height: 1.2;
+  }
+
+  .tl-items {
+    list-style: none;
+    padding: 0;
+  }
+
+  .tl-items li {
+    font-size: 10.5px;
+    color: rgba(232,226,216,0.5);
+    line-height: 1.5;
+    padding-left: 12px;
+    position: relative;
+    margin-bottom: 2px;
+  }
+
+  .tl-items li::before {
+    content: '›';
+    position: absolute;
+    left: 0;
+    font-weight: 700;
+  }
+
+  .tl-block.p1 .tl-items li::before { color: var(--forge-amber); }
+  .tl-block.p2 .tl-items li::before { color: var(--circuit-teal); }
+
+  /* Capital callout */
+  .capital-row {
+    position: relative; z-index: 2;
+    display: flex;
+    gap: 24px;
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(211,84,0,0.2);
+  }
+
+  .capital-card {
+    flex: 1;
+    background: rgba(255,255,255,0.025);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 10px;
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .cap-icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .capital-card:nth-child(1) .cap-icon { background: rgba(211,84,0,0.15); color: var(--forge-amber); }
+  .capital-card:nth-child(2) .cap-icon { background: rgba(46,134,222,0.15); color: var(--circuit-teal); }
+  .capital-card:nth-child(3) .cap-icon { background: rgba(39,174,96,0.12); color: #2ecc71; }
+
+  .cap-info { flex: 1; }
+
+  .cap-value {
+    font-family: 'Instrument Serif', serif;
+    font-size: 24px;
+    color: var(--cream);
+    line-height: 1;
+  }
+
+  .cap-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: rgba(232,226,216,0.4);
+    margin-top: 3px;
+  }
+
+  .cap-detail {
+    font-size: 11px;
+    color: rgba(232,226,216,0.35);
+    margin-top: 2px;
+  }
+
+  /* Animations */
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  .phase-box { animation: fadeIn 0.6s ease forwards; }
+  .phase-box.p2 { animation-delay: 0.15s; }
+  .tl-block { animation: fadeIn 0.5s ease forwards; }
+  .tl-block:nth-child(1) { animation-delay: 0.2s; }
+  .tl-block:nth-child(2) { animation-delay: 0.3s; }
+  .tl-block:nth-child(3) { animation-delay: 0.4s; }
+  .tl-block:nth-child(4) { animation-delay: 0.5s; }
+  .tl-block:nth-child(5) { animation-delay: 0.6s; }
+  .tl-block:nth-child(6) { animation-delay: 0.7s; }
+</style>
+</head>
+<body>
+<div class="canvas">
+  <div class="grid-overlay"></div>
+
+  <div class="header">
+    <div class="brand">
+      <div class="brand-name">BABB WORKS</div>
+      <div class="brand-tag">Electronics Assembly Center — Hamilton, ON</div>
+    </div>
+    <div class="doc-label">
+      Investor Overview<br>
+      <span>Facility & Timeline</span>
+    </div>
+  </div>
+
+  <div class="section-title">Phased Facility Layout</div>
+  <div class="section-subtitle">Existing industrial building with immediate and expansion floor space — designed for iterative growth</div>
+
+  <div class="phases-grid">
+    <div class="phase-box p1">
+      <div class="phase-label">● Phase 1 — Foundation</div>
+      <div class="phase-area-value">4,000 ft²</div>
+      <div class="phase-area-label">Immediate Deployment</div>
+      <div class="floorplan">
+        <div class="zone z-assembly">Assembly<br>Floor<span class="zone-sqft">1,600 ft²</span></div>
+        <div class="zone z-testing">Testing &<br>QC Lab<span class="zone-sqft">600 ft²</span></div>
+        <div class="zone z-firmware">Firmware<br>Lab<span class="zone-sqft">500 ft²</span></div>
+        <div class="zone z-store">Component<br>Store<span class="zone-sqft">400 ft²</span></div>
+        <div class="zone z-training">Training Room<span class="zone-sqft">500 ft²</span></div>
+        <div class="zone z-office">Office / Admin<span class="zone-sqft">400 ft²</span></div>
+      </div>
+    </div>
+
+    <div class="phase-box p2">
+      <div class="phase-label">◈ Phase 2 — Scale</div>
+      <div class="phase-area-value">+ 5,000 ft²</div>
+      <div class="phase-area-label">Expansion Wing</div>
+      <div class="floorplan">
+        <div class="zone z-smt">Automated SMT Line<br><span class="zone-sqft">Pick & Place · Reflow · AOI · 2,000–5,000 bds/day</span></div>
+        <div class="zone z-edu-wing">Education<br>Wing<span class="zone-sqft">24-seat lab<br>+ streaming</span></div>
+        <div class="zone z-test-exp">Expanded Testing<span class="zone-sqft">Enviro chambers · EMC</span></div>
+        <div class="zone z-proto">Prototyping Shop<span class="zone-sqft">3D Print · CNC Mill · Laser Cut</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="timeline-section">
+    <div class="section-title">Implementation Roadmap</div>
+    <div class="section-subtitle">30-month execution plan from lease signing to full-scale operations</div>
+
+    <div class="timeline-track">
+      <div class="timeline-bg"></div>
+      <div class="timeline-fill" style="width: 100%;"></div>
+
+      <div class="tl-block p1 milestone">
+        <div class="tl-node"></div>
+        <div class="tl-content">
+          <div class="tl-period">Months 1–3</div>
+          <div class="tl-title">Site & Setup</div>
+          <ul class="tl-items">
+            <li>Secure building lease</li>
+            <li>ESD, electrical, HVAC upgrades</li>
+            <li>Submit FedDev & AMIC apps</li>
+            <li>Establish supplier accounts</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="tl-block p1">
+        <div class="tl-node"></div>
+        <div class="tl-content">
+          <div class="tl-period">Months 4–6</div>
+          <div class="tl-title">Equip & Hire</div>
+          <ul class="tl-items">
+            <li>Install workstations & test gear</li>
+            <li>First 4 hires</li>
+            <li>Begin product prototyping</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="tl-block p1">
+        <div class="tl-node"></div>
+        <div class="tl-content">
+          <div class="tl-period">Months 7–9</div>
+          <div class="tl-title">First Production</div>
+          <ul class="tl-items">
+            <li>Batch 1 field controllers</li>
+            <li>Launch contract assembly</li>
+            <li>Pilot training cohort</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="tl-block p1 milestone">
+        <div class="tl-node"></div>
+        <div class="tl-content">
+          <div class="tl-period">Months 10–12</div>
+          <div class="tl-title">Breakeven</div>
+          <ul class="tl-items">
+            <li>Scale to 6–8 staff</li>
+            <li>Recurring customer contracts</li>
+            <li>Cash-flow breakeven</li>
+            <li>Phase 2 evaluation</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="tl-block p2">
+        <div class="tl-node"></div>
+        <div class="tl-content">
+          <div class="tl-period">Months 13–18</div>
+          <div class="tl-title">Expand & Automate</div>
+          <ul class="tl-items">
+            <li>Open 5,000 ft² expansion</li>
+            <li>Install SMT line</li>
+            <li>Hire 6–8 more staff</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="tl-block p2 milestone">
+        <div class="tl-node"></div>
+        <div class="tl-content">
+          <div class="tl-period">Months 19–30</div>
+          <div class="tl-title">Full Scale</div>
+          <ul class="tl-items">
+            <li>9,000 ft² operational</li>
+            <li>2,000+ boards/week</li>
+            <li>20–25 staff</li>
+            <li>$1M+ annual revenue</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="capital-row">
+    <div class="capital-card">
+      <div class="cap-icon">▤</div>
+      <div class="cap-info">
+        <div class="cap-value">$510K</div>
+        <div class="cap-label">Phase 1 Capital</div>
+        <div class="cap-detail">Equipment, build-out, 6mo working capital</div>
+      </div>
+    </div>
+    <div class="capital-card">
+      <div class="cap-icon">▥</div>
+      <div class="cap-info">
+        <div class="cap-value">$900K</div>
+        <div class="cap-label">Phase 2 Capital</div>
+        <div class="cap-detail">SMT line, expansion, scaled operations</div>
+      </div>
+    </div>
+    <div class="capital-card">
+      <div class="cap-icon">◉</div>
+      <div class="cap-info">
+        <div class="cap-value">~40%</div>
+        <div class="cap-label">Gov't Funding Target</div>
+        <div class="cap-detail">FedDev + AMIC + SR&ED + ITC</div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
