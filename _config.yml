@@ -1,0 +1,14 @@
+url: ""
+baseurl: ""
+title: "Niagara Assembly Center"
+description: "Building North America's integrated electronics assembly ecosystem. Hamilton, Ontario."
+author: "Niagara Assembly Center"
+
+markdown: kramdown
+kramdown:
+  input: GFM
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - .claude

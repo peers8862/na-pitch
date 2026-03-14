@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(bundle exec jekyll build:*)",
+      "Bash(sips:*)",
+      "Bash(curl:*)",
+      "Bash(ls:*)",
+      "Bash(grep -l \"eyebrow\" /Users/mp/sites/assemblypitch/my-site/pages/*.md)",
+      "Bash(grep \"eyebrow:\" /Users/mp/sites/assemblypitch/my-site/pages/*.md)"
+    ]
+  }
+}

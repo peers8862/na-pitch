@@ -1,0 +1,72 @@
+<nav class="sidebar" id="sidebar" role="navigation" aria-label="Site navigation">
+
+  <div class="sidebar-header">
+    <a href="{{ "/" | relative_url }}" class="brand">
+      <div class="brand-icon">
+        <img src="{{ "/assets/images/logo.jpg" | relative_url }}" alt="NAC logo">
+      </div>
+      <div class="brand-text">
+        <span class="brand-name">Niagara Assembly Center</span>
+        <span class="brand-tagline">NAC &middot; Hamilton, Ontario</span>
+      </div>
+    </a>
+  </div>
+
+  <div class="sidebar-nav">
+
+    <div class="nav-section">
+      <div class="nav-section-label">{{ site.data.navigation.pitch.label }}</div>
+      <ul class="nav-links" role="list">
+        {% for item in site.data.navigation.pitch.pages %}
+        <li class="nav-item{% if page.url == item.url %} active{% endif %}">
+          <a href="{{ item.url | relative_url }}">{{ item.title }}</a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="nav-section nav-section--team">
+      <div class="nav-section-label">{{ site.data.navigation.team.label }}</div>
+      <ul class="nav-links" role="list">
+        {% for item in site.data.navigation.team.pages %}
+        <li class="nav-item{% if page.url == item.url %} active{% endif %}">
+          <a href="{{ item.url | relative_url }}">{{ item.title }}</a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="nav-section nav-section--properties">
+      <div class="nav-section-label">{{ site.data.navigation.properties.label }}</div>
+      <ul class="nav-links" role="list">
+        {% for item in site.data.navigation.properties.pages %}
+        <li class="nav-item{% if page.url == item.url %} active{% endif %}">
+          <a href="{{ item.url | relative_url }}">{{ item.title }}</a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="nav-section nav-section--tools">
+      <div class="nav-section-label">
+        <span class="demo-badge">DEMO</span>
+        {{ site.data.navigation.tools.label }}
+      </div>
+      <ul class="nav-links" role="list">
+        {% for item in site.data.navigation.tools.pages %}
+        <li class="nav-item{% if page.url == item.url %} active{% endif %}">
+          <a href="{{ item.url | relative_url }}">{{ item.title }}</a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="sidebar-footer">
+    <span>{{ site.title }}</span>
+    <span class="sidebar-footer-sep">&middot;</span>
+    <span>2025</span>
+  </div>
+
+</nav>

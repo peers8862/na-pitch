@@ -1,0 +1,187 @@
+---
+layout: tool
+title: "Cross-Border Cost & Lead-Time Simulator"
+tool_tagline: "Compare landed cost, transit variance, and margin across Hamilton, Fort Erie, and Buffalo execution paths."
+permalink: /tools/cross-border-simulator/
+---
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=Outfit:wght@400;600;700;800&display=swap');
+
+  .xb-demo { --bg:#0a111c; --panel:#111b2c; --card:#172439; --border:#2d3f61; --text:#dce7f8; --dim:#90a6c8; --cyan:#38bdf8; --green:#34d399; --amber:#f59e0b; --red:#f87171; --violet:#a78bfa; }
+  .xb-demo, .xb-demo * { box-sizing:border-box; margin:0; padding:0; }
+  .xb-demo { font-family:'IBM Plex Mono', monospace; background:var(--bg); color:var(--text); min-height:100vh; }
+
+  .head { display:flex; justify-content:space-between; align-items:center; padding:14px 18px; border-bottom:1px solid var(--border); background:linear-gradient(180deg, rgba(56,189,248,.1), transparent); }
+  .head h2 { font-family:'Outfit',sans-serif; font-size:20px; background:linear-gradient(90deg,#a5edff,#93c5fd); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  .head p { color:var(--dim); font-size:10px; margin-top:3px; letter-spacing:.08em; text-transform:uppercase; }
+
+  .grid { display:grid; grid-template-columns: 300px 1fr 320px; min-height:calc(100vh - 62px); }
+  .col { border-right:1px solid var(--border); background:var(--panel); padding:12px; overflow:auto; }
+  .col:last-child { border-right:none; border-left:1px solid var(--border); }
+
+  .blk { border:1px solid var(--border); border-radius:10px; background:var(--card); padding:10px; margin-bottom:10px; }
+  .blk h3 { color:var(--dim); font-size:10px; text-transform:uppercase; letter-spacing:.09em; margin-bottom:8px; }
+
+  .field { margin-bottom:8px; }
+  .field label { display:block; font-size:9px; color:var(--dim); margin-bottom:4px; }
+  .field input, .field select { width:100%; background:#0e1728; border:1px solid var(--border); color:var(--text); border-radius:6px; padding:7px; font-size:11px; font-family:inherit; }
+
+  .metrics { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:10px; }
+  .m { border:1px solid var(--border); border-radius:8px; background:var(--card); padding:10px; }
+  .m .l { color:var(--dim); font-size:9px; text-transform:uppercase; margin-bottom:4px; }
+  .m .v { font-family:'Outfit',sans-serif; font-size:23px; font-weight:800; line-height:1; }
+
+  .route { border:1px solid var(--border); border-radius:8px; padding:9px; margin-bottom:8px; background:#111d2f; }
+  .route-top { display:flex; justify-content:space-between; margin-bottom:6px; font-size:10px; }
+
+  .bar-row { margin-bottom:8px; }
+  .bar-meta { display:flex; justify-content:space-between; font-size:10px; margin-bottom:3px; }
+  .bar { height:9px; border:1px solid var(--border); border-radius:999px; background:#0a1321; overflow:hidden; }
+  .bar > span { display:block; height:100%; }
+
+  .tbl { width:100%; border-collapse:collapse; font-size:10px; }
+  .tbl th, .tbl td { padding:7px; border-bottom:1px solid rgba(45,63,97,.6); text-align:left; }
+  .tbl th { font-size:9px; color:var(--dim); text-transform:uppercase; background:rgba(23,36,57,.95); }
+
+  .pill { font-size:8px; padding:2px 6px; border-radius:999px; border:1px solid; }
+  .ok { color:var(--green); border-color:rgba(52,211,153,.5); background:rgba(52,211,153,.12); }
+  .warn { color:var(--amber); border-color:rgba(245,158,11,.5); background:rgba(245,158,11,.12); }
+  .bad { color:var(--red); border-color:rgba(248,113,113,.5); background:rgba(248,113,113,.12); }
+
+  .evt { font-size:10px; color:var(--dim); padding:7px 0; border-bottom:1px solid rgba(45,63,97,.6); }
+
+  @media (max-width: 1100px) {
+    .grid { grid-template-columns:1fr; }
+    .col, .col:last-child { border-right:none; border-left:none; border-bottom:1px solid var(--border); }
+    .metrics { grid-template-columns:repeat(2,1fr); }
+  }
+</style>
+
+<div class="xb-demo">
+  <div class="head">
+    <div>
+      <h2>Cross-Border Cost & Lead-Time Simulator</h2>
+      <p>Landed margin planning across binational execution paths</p>
+    </div>
+  </div>
+
+  <div class="grid">
+    <aside class="col">
+      <div class="blk">
+        <h3>Program Inputs</h3>
+        <div class="field"><label>Order Quantity</label><input id="qty" type="number" value="900"></div>
+        <div class="field"><label>Weight (kg)</label><input id="kg" type="number" value="148"></div>
+        <div class="field"><label>Target Sell Price ($/unit)</label><input id="sell" type="number" value="89"></div>
+        <div class="field"><label>Declared Customs Value ($/unit)</label><input id="decl" type="number" value="52"></div>
+        <div class="field"><label>Tariff Scenario</label><select id="tariff"><option value="base">Base</option><option value="tight">Escalated</option><option value="relief">Relief</option></select></div>
+        <div class="field"><label>Border Congestion</label><select id="congestion"><option value="normal">Normal</option><option value="high">High</option></select></div>
+      </div>
+    </aside>
+
+    <main class="col">
+      <div class="metrics" id="metrics"></div>
+
+      <div class="blk">
+        <h3>Route Comparison</h3>
+        <div id="routes"></div>
+      </div>
+
+      <div class="blk">
+        <h3>Cost Breakdown by Route</h3>
+        <table class="tbl">
+          <thead><tr><th>Route</th><th>Landed $/unit</th><th>Transit (days)</th><th>Variance</th><th>Gross Margin</th></tr></thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+    </main>
+
+    <aside class="col">
+      <div class="blk">
+        <h3>Risk Signals</h3>
+        <div id="risk"></div>
+      </div>
+      <div class="blk">
+        <h3>Recommended Path</h3>
+        <div id="rec"></div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<script>
+(function () {
+  const $ = id => document.getElementById(id);
+  const ids = ['qty','kg','sell','decl','tariff','congestion'];
+  const els = ids.map($);
+
+  const routes = [
+    { id:'ham-only', name:'Hamilton Direct', baseLog:2.1, baseDays:6.2, var:1.8, brokerage:0.4, tariff:0.0 },
+    { id:'fort-erie', name:'Hamilton + Fort Erie Crossing', baseLog:3.0, baseDays:7.1, var:2.6, brokerage:1.4, tariff:1.0 },
+    { id:'buffalo', name:'Hamilton -> Buffalo Final', baseLog:3.6, baseDays:8.0, var:3.1, brokerage:1.9, tariff:1.6 }
+  ];
+
+  function calc() {
+    const qty = Number($('qty').value || 0);
+    const kg = Number($('kg').value || 0);
+    const sell = Number($('sell').value || 0);
+    const decl = Number($('decl').value || 0);
+    const tariffScenario = $('tariff').value;
+    const congestion = $('congestion').value;
+
+    const tariffMul = tariffScenario === 'tight' ? 1.45 : tariffScenario === 'relief' ? 0.72 : 1;
+    const congestionDays = congestion === 'high' ? 1.7 : 0.4;
+    const handlingUnit = 24 + (kg / Math.max(qty, 1)) * 1.8;
+
+    return routes.map(r => {
+      const tariff = (decl * r.tariff / 100) * tariffMul;
+      const landed = handlingUnit + r.baseLog + tariff + r.brokerage;
+      const days = r.baseDays + congestionDays + (congestion === 'high' ? r.var * 0.25 : 0.2);
+      const variance = r.var + (congestion === 'high' ? 1.2 : 0.3);
+      const marginPct = ((sell - landed) / sell) * 100;
+      const risk = Math.min(95, Math.round((variance * 12) + (tariff * 3.5)));
+      return { ...r, landed, days, variance, marginPct, risk };
+    });
+  }
+
+  function render() {
+    const vals = calc();
+    const bestMargin = [...vals].sort((a,b)=>b.marginPct-a.marginPct)[0];
+    const bestLead = [...vals].sort((a,b)=>a.days-b.days)[0];
+    const bestRisk = [...vals].sort((a,b)=>a.risk-b.risk)[0];
+
+    $('metrics').innerHTML = `
+      <div class="m"><div class="l">Best Margin Route</div><div class="v" style="color:var(--green)">${bestMargin.name.split(' ')[0]}</div></div>
+      <div class="m"><div class="l">Fastest Route</div><div class="v" style="color:var(--cyan)">${bestLead.days.toFixed(1)}d</div></div>
+      <div class="m"><div class="l">Lowest Risk</div><div class="v" style="color:var(--violet)">${bestRisk.risk}</div></div>
+      <div class="m"><div class="l">Margin Spread</div><div class="v" style="color:var(--amber)">${(bestMargin.marginPct - Math.min(...vals.map(v=>v.marginPct))).toFixed(1)} pts</div></div>
+    `;
+
+    const maxLanded = Math.max(...vals.map(v=>v.landed));
+    $('routes').innerHTML = vals.map(v => `
+      <div class="route">
+        <div class="route-top"><strong>${v.name}</strong><span>${v.days.toFixed(1)}d</span></div>
+        <div class="bar-row"><div class="bar-meta"><span>Landed Cost</span><span>$${v.landed.toFixed(2)}</span></div><div class="bar"><span style="width:${(v.landed/maxLanded)*100}%;background:var(--amber)"></span></div></div>
+        <div class="bar-row"><div class="bar-meta"><span>Risk Index</span><span>${v.risk}</span></div><div class="bar"><span style="width:${v.risk}%;background:linear-gradient(90deg,var(--green),var(--amber),var(--red))"></span></div></div>
+      </div>
+    `).join('');
+
+    $('rows').innerHTML = vals.map(v => {
+      const tone = v.marginPct > 55 ? 'ok' : v.marginPct > 48 ? 'warn' : 'bad';
+      return `<tr><td>${v.name}</td><td>$${v.landed.toFixed(2)}</td><td>${v.days.toFixed(1)}</td><td>${v.variance.toFixed(1)}d</td><td><span class="pill ${tone}">${v.marginPct.toFixed(1)}%</span></td></tr>`;
+    }).join('');
+
+    $('risk').innerHTML = vals.map(v => `<div class="evt"><strong>${v.name}:</strong> ${v.risk < 35 ? '<span class="pill ok">Stable corridor</span>' : v.risk < 55 ? '<span class="pill warn">Monitor border queue</span>' : '<span class="pill bad">High transit volatility</span>'}</div>`).join('');
+
+    $('rec').innerHTML = `
+      <div class="evt"><strong>Commercial default:</strong> ${bestMargin.name}</div>
+      <div class="evt"><strong>Time-critical fallback:</strong> ${bestLead.name}</div>
+      <div class="evt"><strong>Resilience fallback:</strong> ${bestRisk.name}</div>
+      <div class="evt"><strong>Policy:</strong> lock dual-route contracts when congestion = high</div>
+    `;
+  }
+
+  els.forEach(e => e.addEventListener('input', render));
+  render();
+})();
+</script>

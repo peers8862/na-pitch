@@ -1,0 +1,76 @@
+---
+layout: default
+---
+<div class="tool-content">
+  <div class="tool-banner">
+    <span class="tool-banner-dot"></span>
+    <span class="tool-banner-dot"></span>
+    <span class="tool-banner-dot"></span>
+    DEMO PREVIEW &mdash; Interactive prototype of an upcoming Niagara Assembly platform feature
+  </div>
+  <div class="content-inner">
+    <div class="page-header">
+      <div class="page-eyebrow">Tool Demo</div>
+      <h1>{{ page.title }}</h1>
+      {% if page.tool_tagline %}
+      <p class="page-subtitle">{{ page.tool_tagline }}</p>
+      {% endif %}
+    </div>
+    <div class="demo-fs-bar">
+      <button id="demo-fs-btn" class="demo-fs-btn">
+        <svg class="demo-fs-icon demo-fs-icon--expand" width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M1 5V1H5M8 1H12V5M12 8V12H8M5 12H1V8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <svg class="demo-fs-icon demo-fs-icon--exit" width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:none">
+          <path d="M5 1V5H1M12 5H8V1M8 12V8H12M1 8H5V12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="demo-fs-label">Fullscreen</span>
+      </button>
+    </div>
+    {{ content }}
+  </div>
+</div>
+
+<script>
+(function () {
+  var btn     = document.getElementById('demo-fs-btn');
+  var wrapper = document.querySelector('.tool-content');
+  var label   = btn.querySelector('.demo-fs-label');
+  var iconExp = btn.querySelector('.demo-fs-icon--expand');
+  var iconExit= btn.querySelector('.demo-fs-icon--exit');
+  if (!btn || !wrapper) return;
+
+  function triggerResize() {
+    setTimeout(function () { window.dispatchEvent(new Event('resize')); }, 60);
+  }
+
+  function enter() {
+    wrapper.style.background = getComputedStyle(document.body).backgroundColor;
+    wrapper.classList.add('is-fullscreen');
+    label.textContent  = 'Exit fullscreen';
+    iconExp.style.display  = 'none';
+    iconExit.style.display = '';
+    document.body.style.overflow = 'hidden';
+    wrapper.scrollTop = 0;
+    triggerResize();
+  }
+
+  function exit() {
+    wrapper.style.background = '';
+    wrapper.classList.remove('is-fullscreen');
+    label.textContent  = 'Fullscreen';
+    iconExp.style.display  = '';
+    iconExit.style.display = 'none';
+    document.body.style.overflow = '';
+    triggerResize();
+  }
+
+  btn.addEventListener('click', function () {
+    wrapper.classList.contains('is-fullscreen') ? exit() : enter();
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && wrapper.classList.contains('is-fullscreen')) exit();
+  });
+})();
+</script>

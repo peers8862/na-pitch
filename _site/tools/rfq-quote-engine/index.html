@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <meta name="description" content="Building North America's integrated electronics assembly ecosystem. Hamilton, Ontario.">
+    <title>RFQ-to-Quote Engine — Niagara Assembly Center</title>
+    <link rel="stylesheet" href="/assets/css/main.css?v=1773458928">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  </head>
+  <body>
+    <div class="site-wrapper">
+      <nav class="sidebar" id="sidebar" role="navigation" aria-label="Site navigation">
+
+  <div class="sidebar-header">
+    <a href="/" class="brand">
+      <div class="brand-icon">
+        <img src="/assets/images/logo.jpg" alt="NAC logo">
+      </div>
+      <div class="brand-text">
+        <span class="brand-name">Niagara Assembly Center</span>
+        <span class="brand-tagline">NAC &middot; Hamilton, Ontario</span>
+      </div>
+    </a>
+  </div>
+
+  <div class="sidebar-nav">
+
+    <div class="nav-section">
+      <div class="nav-section-label">Pitch</div>
+      <ul class="nav-links" role="list">
+        
+        <li class="nav-item">
+          <a href="/">Overview</a>
+        </li>
+        
+        <li class="nav-item">
+          <a href="/pages/problem/">Problem</a>
+        </li>
+        
+        <li class="nav-item">
+          <a href="/pages/solution/">Solution</a>
+        </li>
+        
+        <li class="nav-item">
+          <a href="/pages/services/">Services</a>
+        </li>
+        
+        <li class="nav-item">
+          <a href="/pages/market/">Market Opportunity</a>
+        </li>
+        
+        <li class="nav-item">
+          <a href="/pages/ecosystem/">Ecosystem</a>
+        </li>
+        
+        <li class="nav-item">
+          <a href="/pages/marketplace/">Marketplace</a>
+        </li>
+        
+        <li class="nav-item">
+          <a href="/pages/ignition/">Ignition</a>
+        </li>
+        
+        <li class="nav-item">
+          <a href="/pages/roadmap/">Roadmap</a>
+        </li>
+        
+        <li class="nav-item">
+          <a href="/pages/financials/">Financials</a>
+        </li>
+        
+      </ul>
+    </div>
+
+    <div class="nav-section nav-section--team">
+      <div class="nav-section-label">Team</div>
+      <ul class="nav-links" role="list">
+        
+        <li class="nav-item">
+          <a href="/pages/team/production-assembly-lead/">Production & Assembly Lead</a>
+        </li>
+        
+        <li class="nav-item">
+          <a href="/pages/team/firmware-embedded-engineer/">Firmware & Embedded Engineer</a>
+        </li>
+        
+        <li class="nav-item">
+          <a href="/pages/team/workforce-development-coordinator/">Workforce Dev Coordinator</a>
+        </li>
+        
+        <li class="nav-item">
+          <a href="/pages/team/operations-business-development/">Ops & Business Dev Manager</a>
+        </li>
+        
+      </ul>
+    </div>
+
+    <div class="nav-section nav-section--properties">
+      <div class="nav-section-label">Properties</div>
+      <ul class="nav-links" role="list">
+        
+        <li class="nav-item">
+          <a href="/pages/properties/24-clark/">24 Clark</a>
+        </li>
+        
+      </ul>
+    </div>
+
+    <div class="nav-section nav-section--tools">
+      <div class="nav-section-label">
+        <span class="demo-badge">DEMO</span>
+        Network Tools
+      </div>
+      <ul class="nav-links" role="list">
+        
+        <li class="nav-item">
+          <a href="/tools/">ABOUT</a>
+        </li>
+        
+        <li class="nav-item">
+          <a href="/tools/can-usa-pipelines/">CAN-USA Pipelines</a>
+        </li>
+        
+        <li class="nav-item">
+          <a href="/tools/ecosystem-explorer/">Ecosystem Explorer</a>
+        </li>
+        
+        <li class="nav-item">
+          <a href="/tools/city-examiner/">City Examiner</a>
+        </li>
+        
+        <li class="nav-item">
+          <a href="/tools/firmware/">Firmware Bench</a>
+        </li>
+        
+        <li class="nav-item">
+          <a href="/tools/single-location-operations/">Single-Location Console</a>
+        </li>
+        
+        <li class="nav-item">
+          <a href="/tools/ecosystem-orchestrator/">Ecosystem Orchestrator</a>
+        </li>
+        
+        <li class="nav-item">
+          <a href="/tools/quality-compliance/">Quality Cockpit</a>
+        </li>
+        
+        <li class="nav-item">
+          <a href="/tools/dfm-yield-predictor/">DFM + Yield Predictor</a>
+        </li>
+        
+        <li class="nav-item">
+          <a href="/tools/cross-border-simulator/">Cross-Border Simulator</a>
+        </li>
+        
+        <li class="nav-item">
+          <a href="/tools/order-tracker/">Order Tracker</a>
+        </li>
+        
+        <li class="nav-item active">
+          <a href="/tools/rfq-quote-engine/">RFQ to Quote</a>
+        </li>
+        
+        <li class="nav-item">
+          <a href="/tools/investor-scenario-engine/">Investor Engine</a>
+        </li>
+        
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="sidebar-footer">
+    <span>Niagara Assembly Center</span>
+    <span class="sidebar-footer-sep">&middot;</span>
+    <span>2025</span>
+  </div>
+
+</nav>
+
+      <main class="main-content" id="main-content">
+        <div class="tool-content">
+  <div class="tool-banner">
+    <span class="tool-banner-dot"></span>
+    <span class="tool-banner-dot"></span>
+    <span class="tool-banner-dot"></span>
+    DEMO PREVIEW &mdash; Interactive prototype of an upcoming Niagara Assembly platform feature
+  </div>
+  <div class="content-inner">
+    <div class="page-header">
+      <div class="page-eyebrow">Tool Demo</div>
+      <h1>RFQ-to-Quote Engine</h1>
+      
+      <p class="page-subtitle">Convert BOM, quantity, and service constraints into quote bands, lead-time promises, and margin envelopes.</p>
+      
+    </div>
+    <div class="demo-fs-bar">
+      <button id="demo-fs-btn" class="demo-fs-btn">
+        <svg class="demo-fs-icon demo-fs-icon--expand" width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M1 5V1H5M8 1H12V5M12 8V12H8M5 12H1V8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <svg class="demo-fs-icon demo-fs-icon--exit" width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:none">
+          <path d="M5 1V5H1M12 5H8V1M8 12V8H12M1 8H5V12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="demo-fs-label">Fullscreen</span>
+      </button>
+    </div>
+    <style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=Outfit:wght@400;600;700;800&display=swap');
+
+  .rfq-demo {
+    --bg: #0b1220;
+    --panel: #121d31;
+    --card: #18253b;
+    --border: #2d3f60;
+    --text: #d9e6f8;
+    --dim: #8ca4c7;
+    --cyan: #38bdf8;
+    --green: #34d399;
+    --amber: #f59e0b;
+    --red: #f87171;
+    --violet: #a78bfa;
+  }
+  .rfq-demo, .rfq-demo * { box-sizing: border-box; margin: 0; padding: 0; }
+  .rfq-demo { font-family: 'IBM Plex Mono', monospace; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  .rfq-head { display:flex; justify-content:space-between; align-items:center; padding:14px 18px; border-bottom:1px solid var(--border); background: linear-gradient(180deg, rgba(56,189,248,0.1), transparent); }
+  .rfq-head h2 { font-family:'Outfit',sans-serif; font-size:20px; letter-spacing:-0.02em; background:linear-gradient(90deg,#a5edff,#93c5fd); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  .rfq-head p { margin-top:3px; color: var(--dim); font-size:10px; letter-spacing:.08em; text-transform:uppercase; }
+
+  .rfq-wrap { display:grid; grid-template-columns: 300px 1fr 320px; min-height: calc(100vh - 62px); }
+  .col { border-right:1px solid var(--border); background: var(--panel); }
+  .col:last-child { border-right:none; border-left:1px solid var(--border); }
+  .col-main { padding:12px; overflow:auto; }
+  .col-side { padding:12px; overflow:auto; }
+
+  .blk { border:1px solid var(--border); border-radius:10px; background:var(--card); padding:10px; margin-bottom:10px; }
+  .blk h3 { color:var(--dim); font-size:10px; letter-spacing:.09em; text-transform:uppercase; margin-bottom:8px; }
+
+  .field { margin-bottom:8px; }
+  .field label { display:block; font-size:9px; color:var(--dim); margin-bottom:4px; text-transform:uppercase; }
+  .field input, .field select { width:100%; background:#0e1728; border:1px solid var(--border); color:var(--text); font-size:11px; border-radius:6px; padding:7px; font-family: inherit; }
+
+  .kpi { display:grid; grid-template-columns: repeat(4,1fr); gap:9px; margin-bottom:10px; }
+  .k { border:1px solid var(--border); border-radius:8px; background:var(--card); padding:10px; }
+  .k .l { color:var(--dim); font-size:9px; text-transform:uppercase; margin-bottom:4px; }
+  .k .v { font-family:'Outfit',sans-serif; font-size:24px; font-weight:800; line-height:1; }
+
+  .band { margin-bottom:8px; }
+  .band-row { display:flex; justify-content:space-between; font-size:10px; margin-bottom:3px; }
+  .bar { height:9px; border:1px solid var(--border); border-radius:999px; overflow:hidden; background:#0b1322; }
+  .bar > span { display:block; height:100%; }
+
+  .tbl { width:100%; border-collapse: collapse; font-size:10px; }
+  .tbl th, .tbl td { padding:7px; border-bottom:1px solid rgba(45,63,96,.6); text-align:left; }
+  .tbl th { color:var(--dim); font-size:9px; text-transform:uppercase; background: rgba(24,37,59,.9); }
+  .pill { font-size:8px; border:1px solid; border-radius:999px; padding:2px 6px; }
+  .ok { color:var(--green); border-color: rgba(52,211,153,.5); background: rgba(52,211,153,.12); }
+  .warn { color:var(--amber); border-color: rgba(245,158,11,.5); background: rgba(245,158,11,.12); }
+  .bad { color:var(--red); border-color: rgba(248,113,113,.5); background: rgba(248,113,113,.12); }
+
+  .evt { font-size:10px; color:var(--dim); padding:7px 0; border-bottom:1px solid rgba(45,63,96,.6); }
+  .evt strong { color:var(--text); }
+
+  @media (max-width: 1100px) {
+    .rfq-wrap { grid-template-columns: 1fr; }
+    .col, .col:last-child { border-right:none; border-left:none; border-bottom:1px solid var(--border); }
+    .kpi { grid-template-columns: repeat(2,1fr); }
+  }
+</style>
+
+<div class="rfq-demo">
+  <div class="rfq-head">
+    <div>
+      <h2>RFQ-to-Quote Engine</h2>
+      <p>Commercial decisioning over BOM volatility, service level, and supply risk</p>
+    </div>
+  </div>
+
+  <div class="rfq-wrap">
+    <aside class="col col-side">
+      <div class="blk">
+        <h3>RFQ Inputs</h3>
+        <div class="field"><label>Customer</label><input id="in-customer" value="RailSense Systems" /></div>
+        <div class="field"><label>Build Quantity</label><input id="in-qty" type="number" value="650" /></div>
+        <div class="field"><label>BOM Line Items</label><input id="in-bom" type="number" value="192" /></div>
+        <div class="field"><label>Unique MPN Count</label><input id="in-mpn" type="number" value="141" /></div>
+        <div class="field"><label>Service Tier</label>
+          <select id="in-tier">
+            <option value="standard">Standard</option>
+            <option value="priority">Priority</option>
+            <option value="expedite">Expedite</option>
+          </select>
+        </div>
+        <div class="field"><label>Cross-Border Delivery</label>
+          <select id="in-border">
+            <option value="no">No</option>
+            <option value="yes">Yes</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="blk">
+        <h3>Risk Drivers</h3>
+        <div class="field"><label>AVL Coverage (%)</label><input id="in-avl" type="number" value="74" /></div>
+        <div class="field"><label>Long-Lead Components</label><input id="in-long" type="number" value="9" /></div>
+        <div class="field"><label>Forecast Confidence (%)</label><input id="in-forecast" type="number" value="62" /></div>
+      </div>
+    </aside>
+
+    <main class="col-main">
+      <div class="kpi" id="kpi"></div>
+
+      <div class="blk">
+        <h3>Quote Band &amp; Margin Envelope</h3>
+        <div id="bands"></div>
+      </div>
+
+      <div class="blk">
+        <h3>Cost Stack Snapshot</h3>
+        <table class="tbl">
+          <thead><tr><th>Cost Bucket</th><th>$/Unit</th><th>% of Quote</th><th>Signal</th></tr></thead>
+          <tbody id="cost-body"></tbody>
+        </table>
+      </div>
+    </main>
+
+    <aside class="col col-side">
+      <div class="blk">
+        <h3>Commitment Timeline</h3>
+        <div id="timeline"></div>
+      </div>
+      <div class="blk">
+        <h3>Approval Gates</h3>
+        <div id="gates"></div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<script>
+(function () {
+  const el = id => document.getElementById(id);
+  const inputs = ['in-customer','in-qty','in-bom','in-mpn','in-tier','in-border','in-avl','in-long','in-forecast'].map(el);
+
+  function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+
+  function compute() {
+    const qty = Number(el('in-qty').value || 0);
+    const bom = Number(el('in-bom').value || 0);
+    const mpn = Number(el('in-mpn').value || 0);
+    const tier = el('in-tier').value;
+    const border = el('in-border').value === 'yes';
+    const avl = Number(el('in-avl').value || 0);
+    const longLead = Number(el('in-long').value || 0);
+    const fc = Number(el('in-forecast').value || 0);
+
+    const baseMat = 24 + bom * 0.045 + mpn * 0.03;
+    const labor = 7.5 + bom * 0.012;
+    const test = 2.6 + (tier === 'priority' ? 0.6 : tier === 'expedite' ? 1.2 : 0.3);
+    const logistics = border ? 3.4 : 1.5;
+
+    const riskIdx = clamp(100 - avl + longLead * 2.8 + (100 - fc) * 0.35, 8, 92);
+    const riskPremium = riskIdx * 0.06;
+    const tierPremium = tier === 'standard' ? 0 : tier === 'priority' ? 3.5 : 7.5;
+    const unitCost = baseMat + labor + test + logistics + riskPremium;
+
+    const marginTarget = clamp(22 + (tier === 'expedite' ? 5 : tier === 'priority' ? 2 : 0) - riskIdx * 0.05, 14, 33);
+    const quoteLow = unitCost / (1 - (marginTarget - 3) / 100);
+    const quoteMid = unitCost / (1 - marginTarget / 100);
+    const quoteHigh = unitCost / (1 - (marginTarget + 3.5) / 100);
+
+    const leadDays = Math.round(10 + longLead * 1.4 + (tier === 'expedite' ? -3 : tier === 'priority' ? -1 : 0) + (border ? 2 : 0));
+    const winProb = clamp(76 - quoteMid * 0.32 + (tier !== 'standard' ? 6 : 0), 18, 88);
+
+    return {
+      qty, riskIdx, marginTarget, unitCost, quoteLow, quoteMid, quoteHigh, leadDays, winProb,
+      buckets: [
+        ['Materials', baseMat],
+        ['Assembly Labor', labor],
+        ['Test & Validation', test],
+        ['Logistics & Compliance', logistics],
+        ['Risk Premium', riskPremium + tierPremium]
+      ]
+    };
+  }
+
+  function tone(v) { return v < 30 ? 'ok' : v < 55 ? 'warn' : 'bad'; }
+
+  function render() {
+    const c = compute();
+
+    el('kpi').innerHTML = `
+      <div class="k"><div class="l">Quote Mid ($/unit)</div><div class="v" style="color:var(--cyan)">$${c.quoteMid.toFixed(2)}</div></div>
+      <div class="k"><div class="l">Margin Target</div><div class="v" style="color:var(--green)">${c.marginTarget.toFixed(1)}%</div></div>
+      <div class="k"><div class="l">Promised Lead Time</div><div class="v" style="color:var(--violet)">${c.leadDays}d</div></div>
+      <div class="k"><div class="l">Estimated Win Probability</div><div class="v" style="color:${c.winProb > 55 ? 'var(--green)' : 'var(--amber)'}">${c.winProb}%</div></div>
+    `;
+
+    const maxQ = c.quoteHigh * 1.15;
+    el('bands').innerHTML = `
+      <div class="band"><div class="band-row"><span>Low Confidence Quote</span><span>$${c.quoteLow.toFixed(2)}</span></div><div class="bar"><span style="width:${(c.quoteLow/maxQ)*100}%;background:var(--green)"></span></div></div>
+      <div class="band"><div class="band-row"><span>Target Quote</span><span>$${c.quoteMid.toFixed(2)}</span></div><div class="bar"><span style="width:${(c.quoteMid/maxQ)*100}%;background:var(--cyan)"></span></div></div>
+      <div class="band"><div class="band-row"><span>High Risk Quote</span><span>$${c.quoteHigh.toFixed(2)}</span></div><div class="bar"><span style="width:${(c.quoteHigh/maxQ)*100}%;background:var(--amber)"></span></div></div>
+    `;
+
+    const total = c.buckets.reduce((s, b) => s + b[1], 0);
+    el('cost-body').innerHTML = c.buckets.map(([name, v]) => {
+      const pct = (v / c.quoteMid) * 100;
+      const signal = name === 'Risk Premium' ? (c.riskIdx > 45 ? 'warn' : 'ok') : 'ok';
+      const txt = signal === 'warn' ? 'Monitor' : 'Stable';
+      return `<tr><td>${name}</td><td>$${v.toFixed(2)}</td><td>${pct.toFixed(1)}%</td><td><span class="pill ${signal}">${txt}</span></td></tr>`;
+    }).join('');
+
+    el('timeline').innerHTML = `
+      <div class="evt"><strong>D+0:</strong> RFQ intake + BOM sanity validation</div>
+      <div class="evt"><strong>D+1:</strong> AVL and long-lead risk screening</div>
+      <div class="evt"><strong>D+2:</strong> Supplier pulls + capacity reservation</div>
+      <div class="evt"><strong>D+3:</strong> Quote release (${c.leadDays}d promise)</div>
+      <div class="evt"><strong>D+5:</strong> PO lock and NPI kickoff</div>
+    `;
+
+    el('gates').innerHTML = `
+      <div class="evt"><strong>Commercial Gate:</strong> ${c.winProb > 50 ? '<span class="pill ok">Recommended</span>' : '<span class="pill warn">Re-price</span>'}</div>
+      <div class="evt"><strong>Supply Gate:</strong> <span class="pill ${tone(c.riskIdx)}">Risk ${c.riskIdx.toFixed(0)}</span></div>
+      <div class="evt"><strong>Margin Gate:</strong> <span class="pill ${c.marginTarget > 20 ? 'ok' : 'warn'}">${c.marginTarget.toFixed(1)}% target</span></div>
+      <div class="evt"><strong>Capacity Gate:</strong> <span class="pill ${c.leadDays <= 16 ? 'ok' : 'warn'}">${c.leadDays} day commit</span></div>
+    `;
+  }
+
+  inputs.forEach(i => i.addEventListener('input', render));
+  render();
+})();
+</script>
+
+
+  </div>
+</div>
+
+<script>
+(function () {
+  var btn     = document.getElementById('demo-fs-btn');
+  var wrapper = document.querySelector('.tool-content');
+  var label   = btn.querySelector('.demo-fs-label');
+  var iconExp = btn.querySelector('.demo-fs-icon--expand');
+  var iconExit= btn.querySelector('.demo-fs-icon--exit');
+  if (!btn || !wrapper) return;
+
+  function triggerResize() {
+    setTimeout(function () { window.dispatchEvent(new Event('resize')); }, 60);
+  }
+
+  function enter() {
+    wrapper.style.background = getComputedStyle(document.body).backgroundColor;
+    wrapper.classList.add('is-fullscreen');
+    label.textContent  = 'Exit fullscreen';
+    iconExp.style.display  = 'none';
+    iconExit.style.display = '';
+    document.body.style.overflow = 'hidden';
+    wrapper.scrollTop = 0;
+    triggerResize();
+  }
+
+  function exit() {
+    wrapper.style.background = '';
+    wrapper.classList.remove('is-fullscreen');
+    label.textContent  = 'Fullscreen';
+    iconExp.style.display  = '';
+    iconExit.style.display = 'none';
+    document.body.style.overflow = '';
+    triggerResize();
+  }
+
+  btn.addEventListener('click', function () {
+    wrapper.classList.contains('is-fullscreen') ? exit() : enter();
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && wrapper.classList.contains('is-fullscreen')) exit();
+  });
+})();
+</script>
+
+      </main>
+    </div>
+
+    <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle navigation">
+      <span>&#9776;</span>
+    </button>
+
+    <script>
+      (function() {
+        var toggle = document.getElementById('sidebar-toggle');
+        var sidebar = document.querySelector('.sidebar');
+        toggle.addEventListener('click', function() {
+          sidebar.classList.toggle('is-open');
+        });
+        document.getElementById('main-content').addEventListener('click', function() {
+          sidebar.classList.remove('is-open');
+        });
+      })();
+    </script>
+  </body>
+</html>
