@@ -1,8 +1,8 @@
 ---
 layout: page
-title: "The Ecosystem"
+title: "Ecosystem"
 subtitle: "Coordinated production across the Greater Niagara Region — and beyond."
-eyebrow: "The Ecosystem"
+eyebrow: "Hamilton Buffalo Region"
 permalink: /pages/ecosystem/
 ---
 

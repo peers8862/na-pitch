@@ -2,7 +2,7 @@
 layout: page
 title: "Financials"
 subtitle: "Startup capital requirements, year-one operating costs, and grant potential."
-eyebrow: "Financial Snapshot"
+eyebrow: "Primary Snapshots"
 permalink: /pages/financials/
 ---
 

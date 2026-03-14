@@ -1,6 +1,6 @@
 ---
 layout: page
-title: "The Marketplace"
+title: "Marketplace"
 subtitle: "A coordination layer that intensifies production, channels investment, and circulates expertise across the network."
 eyebrow: "Niagara Assembly"
 permalink: /pages/marketplace/

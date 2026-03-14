@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Babb Works — Strategic Position & Market Convergence</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif&family=DM+Sans:wght@300;400;500;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --steel: #1a2332;
+    --forge-orange: #d35400;
+    --forge-amber: #e67e22;
+    --circuit-blue: #2e86de;
+    --circuit-teal: #0abde3;
+    --cream: #faf8f5;
+    --green: #27ae60;
+  }
+
+  body {
+    background: var(--steel);
+    font-family: 'DM Sans', sans-serif;
+    color: #e8e2d8;
+  }
+
+  .canvas {
+    width: 1200px;
+    min-height: 900px;
+    margin: 0 auto;
+    position: relative;
+    padding: 48px 56px;
+    background: linear-gradient(160deg, #1a2332 0%, #0f1922 45%, #162030 100%);
+    overflow: hidden;
+  }
+
+  .canvas::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: 
+      radial-gradient(circle 400px at 50% 45%, rgba(211,84,0,0.04) 0%, transparent 60%),
+      radial-gradient(ellipse 600px 400px at 20% 80%, rgba(46,134,222,0.04) 0%, transparent 60%),
+      radial-gradient(ellipse 600px 400px at 80% 80%, rgba(39,174,96,0.04) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .grid-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: 
+      linear-gradient(rgba(46,134,222,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(46,134,222,0.02) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+  }
+
+  .header {
+    position: relative; z-index: 2;
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 32px; padding-bottom: 20px;
+    border-bottom: 1px solid rgba(211,84,0,0.3);
+  }
+
+  .brand { display: flex; flex-direction: column; gap: 4px; }
+  .brand-name { font-family: 'Instrument Serif', serif; font-size: 38px; color: var(--cream); letter-spacing: 2px; line-height: 1; }
+  .brand-tag { font-size: 11px; text-transform: uppercase; letter-spacing: 4px; color: var(--forge-orange); font-weight: 500; }
+  .doc-label { text-align: right; font-size: 11px; text-transform: uppercase; letter-spacing: 3px; color: rgba(232,226,216,0.4); line-height: 1.8; }
+  .doc-label span { display: block; color: var(--circuit-teal); font-weight: 600; }
+
+  .section-title { position: relative; z-index: 2; font-family: 'Instrument Serif', serif; font-size: 26px; color: var(--cream); margin-bottom: 6px; }
+  .section-subtitle { font-size: 13px; color: rgba(232,226,216,0.45); margin-bottom: 28px; font-weight: 300; }
+
+  /* CONVERGENCE DIAGRAM */
+  .convergence {
+    position: relative;
+    z-index: 2;
+    height: 360px;
+    margin-bottom: 32px;
+  }
+
+  .force-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1.5px solid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .force-ring.r1 {
+    width: 240px; height: 240px;
+    top: 30px; left: 180px;
+    border-color: rgba(211,84,0,0.25);
+    background: radial-gradient(circle, rgba(211,84,0,0.06) 0%, transparent 70%);
+  }
+
+  .force-ring.r2 {
+    width: 240px; height: 240px;
+    top: 30px; right: 180px;
+    border-color: rgba(46,134,222,0.25);
+    background: radial-gradient(circle, rgba(46,134,222,0.06) 0%, transparent 70%);
+  }
+
+  .force-ring.r3 {
+    width: 240px; height: 240px;
+    bottom: 0; left: 50%;
+    transform: translateX(-50%);
+    border-color: rgba(39,174,96,0.25);
+    background: radial-gradient(circle, rgba(39,174,96,0.06) 0%, transparent 70%);
+  }
+
+  .force-label {
+    position: absolute;
+    text-align: center;
+    z-index: 3;
+  }
+
+  .force-label .fl-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: 17px;
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+
+  .force-label .fl-stat {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    opacity: 0.6;
+    line-height: 1.5;
+  }
+
+  .fl-reindustrialization {
+    top: 50px; left: 196px;
+    width: 200px;
+  }
+  .fl-reindustrialization .fl-title { color: var(--forge-amber); }
+
+  .fl-reshoring {
+    top: 50px; right: 196px;
+    width: 200px;
+  }
+  .fl-reshoring .fl-title { color: var(--circuit-teal); }
+
+  .fl-demand {
+    bottom: 40px; left: 50%;
+    transform: translateX(-50%);
+    width: 220px;
+  }
+  .fl-demand .fl-title { color: #2ecc71; }
+
+  /* Center convergence */
+  .center-node {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 140px;
+    height: 140px;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .center-glow {
+    position: absolute;
+    width: 160px; height: 160px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(211,84,0,0.15) 0%, rgba(211,84,0,0.05) 40%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    animation: pulse 3s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    50% { transform: translate(-50%, -50%) scale(1.15); opacity: 0.7; }
+  }
+
+  .center-text {
+    position: relative;
+    z-index: 6;
+    font-family: 'Instrument Serif', serif;
+    font-size: 20px;
+    color: var(--cream);
+    line-height: 1.2;
+  }
+
+  .center-sub {
+    position: relative;
+    z-index: 6;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--forge-amber);
+    margin-top: 4px;
+  }
+
+  /* Connecting lines (decorative) */
+  .conn-line {
+    position: absolute;
+    z-index: 1;
+    height: 1px;
+  }
+
+  /* COMPETITIVE POSITIONING */
+  .positioning {
+    position: relative; z-index: 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 28px;
+  }
+
+  .pos-card {
+    background: rgba(255,255,255,0.025);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 22px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .pos-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    border-radius: 12px 12px 0 0;
+  }
+
+  .pos-card.moat::before { background: linear-gradient(90deg, var(--forge-orange), var(--forge-amber)); }
+  .pos-card.gap::before { background: linear-gradient(90deg, var(--circuit-blue), var(--circuit-teal)); }
+
+  .pos-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: 18px;
+    color: var(--cream);
+    margin-bottom: 14px;
+  }
+
+  /* Spectrum visualization */
+  .spectrum {
+    position: relative;
+    height: 72px;
+    margin-bottom: 14px;
+  }
+
+  .spectrum-bar {
+    position: absolute;
+    bottom: 28px;
+    left: 0; right: 0;
+    height: 8px;
+    background: linear-gradient(90deg, 
+      rgba(211,84,0,0.15) 0%, 
+      rgba(211,84,0,0.3) 20%,
+      rgba(46,134,222,0.15) 50%,
+      rgba(46,134,222,0.3) 80%,
+      rgba(46,134,222,0.15) 100%);
+    border-radius: 4px;
+  }
+
+  .spectrum-label {
+    position: absolute;
+    bottom: 0;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: rgba(232,226,216,0.35);
+  }
+
+  .spectrum-label.left { left: 0; }
+  .spectrum-label.right { right: 0; }
+
+  .spectrum-marker {
+    position: absolute;
+    bottom: 25px;
+    width: 20px;
+    height: 14px;
+    border-radius: 3px;
+    transform: translateX(-50%);
+  }
+
+  .spectrum-marker-label {
+    position: absolute;
+    bottom: 44px;
+    transform: translateX(-50%);
+    font-size: 9.5px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .marker-ems { left: 10%; }
+  .marker-ems .spectrum-marker { background: rgba(232,226,216,0.2); bottom: 25px; }
+  .marker-ems .spectrum-marker-label { color: rgba(232,226,216,0.4); }
+
+  .marker-hobby { left: 90%; }
+  .marker-hobby .spectrum-marker { background: rgba(232,226,216,0.2); }
+  .marker-hobby .spectrum-marker-label { color: rgba(232,226,216,0.4); }
+
+  .marker-babb { left: 45%; }
+  .marker-babb .spectrum-marker { background: var(--forge-amber); height: 16px; bottom: 24px; box-shadow: 0 0 10px rgba(211,84,0,0.4); }
+  .marker-babb .spectrum-marker-label { color: var(--forge-amber); font-size: 11px; }
+
+  .pos-desc {
+    font-size: 12px;
+    color: rgba(232,226,216,0.5);
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  /* Advantages grid */
+  .advantages {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .adv-item {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 10px 12px;
+    background: rgba(255,255,255,0.02);
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .adv-icon {
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    flex-shrink: 0;
+    background: rgba(211,84,0,0.12);
+    color: var(--forge-amber);
+  }
+
+  .adv-text {
+    font-size: 11px;
+    line-height: 1.5;
+  }
+
+  .adv-text strong {
+    color: var(--cream);
+    display: block;
+    font-size: 12px;
+    margin-bottom: 1px;
+  }
+
+  .adv-text span { color: rgba(232,226,216,0.45); }
+
+  /* HAMILTON ADVANTAGES FOOTER */
+  .hamilton-bar {
+    position: relative; z-index: 2;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(211,84,0,0.2);
+  }
+
+  .ham-stat {
+    text-align: center;
+    padding: 14px 8px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.04);
+    border-radius: 8px;
+  }
+
+  .ham-value {
+    font-family: 'Instrument Serif', serif;
+    font-size: 22px;
+    color: var(--forge-amber);
+    line-height: 1;
+  }
+
+  .ham-label {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: rgba(232,226,216,0.35);
+    margin-top: 4px;
+    line-height: 1.4;
+  }
+
+  /* Animations */
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes scaleIn { from { opacity: 0; transform: translate(-50%, -50%) scale(0.6); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
+
+  .force-ring { animation: fadeIn 0.7s ease forwards; opacity: 0; }
+  .force-ring.r1 { animation-delay: 0.1s; }
+  .force-ring.r2 { animation-delay: 0.25s; }
+  .force-ring.r3 { animation-delay: 0.4s; }
+  .center-node { animation: scaleIn 0.6s ease forwards; animation-delay: 0.6s; opacity: 0; }
+  .pos-card { animation: fadeIn 0.5s ease forwards; opacity: 0; }
+  .pos-card:nth-child(1) { animation-delay: 0.8s; }
+  .pos-card:nth-child(2) { animation-delay: 0.95s; }
+</style>
+</head>
+<body>
+<div class="canvas">
+  <div class="grid-overlay"></div>
+
+  <div class="header">
+    <div class="brand">
+      <div class="brand-name">BABB WORKS</div>
+      <div class="brand-tag">Electronics Assembly Center — Hamilton, ON</div>
+    </div>
+    <div class="doc-label">
+      Investor Overview<br>
+      <span>Strategic Position</span>
+    </div>
+  </div>
+
+  <div class="section-title">Strategic Convergence</div>
+  <div class="section-subtitle">Three macro forces are converging to create the optimal conditions for Babb Works — right now, right here</div>
+
+  <div class="convergence">
+    <div class="force-ring r1"></div>
+    <div class="force-ring r2"></div>
+    <div class="force-ring r3"></div>
+
+    <div class="force-label fl-reindustrialization">
+      <div class="fl-title">North American<br>Reindustrialization</div>
+      <div class="fl-stat">2.5M+ jobs reshored since 2010<br>$52.7B U.S. CHIPS Act<br>Ontario: 12% GDP = manufacturing</div>
+    </div>
+
+    <div class="force-label fl-reshoring">
+      <div class="fl-title">Electronics<br>Reshoring</div>
+      <div class="fl-stat">244K jobs announced 2024<br>Tariff pressure on China imports<br>Nearshore demand accelerating</div>
+    </div>
+
+    <div class="force-label fl-demand">
+      <div class="fl-title">Industrial IoT &<br>Edge Computing Demand</div>
+      <div class="fl-stat">$321B global IIoT market (23% CAGR)<br>$61B NA edge computing by 2028<br>Trades need purpose-built tools</div>
+    </div>
+
+    <div class="center-node">
+      <div class="center-glow"></div>
+      <div class="center-text">Babb<br>Works</div>
+      <div class="center-sub">The Convergence Point</div>
+    </div>
+  </div>
+
+  <div class="positioning">
+    <div class="pos-card moat">
+      <div class="pos-title">Competitive Positioning</div>
+      <div class="spectrum">
+        <div class="spectrum-bar"></div>
+        <div class="spectrum-label left">Mega EMS (10K+ MOQ)</div>
+        <div class="spectrum-label right">Hobbyist Shops</div>
+        <div class="marker-ems">
+          <div class="spectrum-marker"></div>
+          <div class="spectrum-marker-label">Celestica / Jabil</div>
+        </div>
+        <div class="marker-babb">
+          <div class="spectrum-marker"></div>
+          <div class="spectrum-marker-label">★ BABB WORKS</div>
+        </div>
+        <div class="marker-hobby">
+          <div class="spectrum-marker"></div>
+          <div class="spectrum-marker-label">Garage Assembly</div>
+        </div>
+      </div>
+      <div class="pos-desc">Babb Works occupies the strategic gap between massive EMS providers requiring 10,000+ unit minimums and hobbyist-grade assembly with no quality systems. Professional-grade, small-batch, full-stack — from PCB to optimized firmware.</div>
+    </div>
+
+    <div class="pos-card gap">
+      <div class="pos-title">The Binary Code Moat</div>
+      <div class="advantages">
+        <div class="adv-item">
+          <div class="adv-icon">⚡</div>
+          <div class="adv-text">
+            <strong>40–70% Less Power</strong>
+            <span>Assembly-optimized firmware vs. C/C++ equivalents</span>
+          </div>
+        </div>
+        <div class="adv-item">
+          <div class="adv-icon">◎</div>
+          <div class="adv-text">
+            <strong>Deterministic Timing</strong>
+            <span>Cycle-exact control for industrial real-time</span>
+          </div>
+        </div>
+        <div class="adv-item">
+          <div class="adv-icon">▣</div>
+          <div class="adv-text">
+            <strong>Smaller Silicon</strong>
+            <span>Run on cheaper MCUs — lower BOM cost</span>
+          </div>
+        </div>
+        <div class="adv-item">
+          <div class="adv-icon">◈</div>
+          <div class="adv-text">
+            <strong>Hardened Security</strong>
+            <span>Fewer layers = smaller attack surface</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hamilton-bar">
+    <div class="ham-stat">
+      <div class="ham-value">60%</div>
+      <div class="ham-label">of Canada's Steel<br>from Hamilton</div>
+    </div>
+    <div class="ham-stat">
+      <div class="ham-value">10.6%</div>
+      <div class="ham-label">Manufacturing<br>Employment Share</div>
+    </div>
+    <div class="ham-stat">
+      <div class="ham-value">700+</div>
+      <div class="ham-label">Vessels/Year<br>Port of Hamilton</div>
+    </div>
+    <div class="ham-stat">
+      <div class="ham-value">$2.9B</div>
+      <div class="ham-label">FedDev Ontario<br>Invested Since 2015</div>
+    </div>
+    <div class="ham-stat">
+      <div class="ham-value">#1</div>
+      <div class="ham-label">Express Cargo<br>Airport in Canada</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

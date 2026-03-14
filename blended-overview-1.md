@@ -6,7 +6,7 @@ This model responds to a clear market failure. Today, electronics production is 
 
 ## Why This Works Now
 
-The timing is unusually strong. Reshoring pressure is real, policy support is active, and binational geography in the Niagara-Hamilton-Buffalo corridor offers a structural advantage that is difficult to replicate. Federal and provincial programs in Canada, together with New York State and cross-border incentives, create a practical near-term window for accelerated buildout.
+The timing is unusually strong. Reshoring pressure is real, policy support is active, and binational geography in the Niagara-Hamilton-Buffalo corridor offers a structural advantage that is difficult to replicate. Federal and provincial programs in Canada, together with New York State and cross-border incentives, create a practical near-term window for accelerated buildo[text](<../../../../../var/folders/0c/1nvbf41j6lb3mb_tdcyd97mw0000gn/T/com.apple.useractivityd/shared-pasteboard/items/F7839466-73E8-4C0C-91F8-DCC14C8F1178/For Mum>)ut.
 
 At the same time, succession pressure among owner-operated regional manufacturers creates an acquisition and partnership opportunity that will not remain open indefinitely. NAC is designed to act while that window is still favorable.
 
