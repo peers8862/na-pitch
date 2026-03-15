@@ -2,13 +2,18 @@
 layout: tool
 title: "Pipelines"
 tool_tagline: "Analyze the optimal pathways and partnerships for your production processes."
-permalink: /tools/bom-analyzer/
+permalink: /tools/pipelines/
 ---
 
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Niagara–Buffalo DPN · Pathfinding &amp; Production Queues</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=Outfit:wght@300;400;600;700;800&display=swap');
 
-  .pipelines-demo {
+  :root {
     --bg-deep: #0a0e17;
     --bg-panel: #111827;
     --bg-card: #1a2235;
@@ -27,9 +32,9 @@ permalink: /tools/bom-analyzer/
     --glow-orange: rgba(255, 107, 53, 0.15);
   }
 
-  .pipelines-demo, .pipelines-demo * { margin: 0; padding: 0; box-sizing: border-box; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
-  .pipelines-demo {
+  body {
     font-family: 'IBM Plex Mono', monospace;
     background: var(--bg-deep);
     color: var(--text-primary);
@@ -250,12 +255,13 @@ permalink: /tools/bom-analyzer/
   .tooltip .tt-title { font-weight: 600; color: var(--accent-cyan); margin-bottom: 3px; }
   .tooltip .tt-row { color: var(--text-secondary); margin-top: 1px; }
 
-  .pipelines-demo ::-webkit-scrollbar { width: 4px; }
-  .pipelines-demo ::-webkit-scrollbar-track { background: transparent; }
-  .pipelines-demo ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 </style>
+</head>
+<body>
 
-<div class="pipelines-demo">
 <div class="header">
   <div>
     <h1>Niagara–Buffalo Distributed Production Network</h1>
@@ -1411,4 +1417,5 @@ updateFlowBars();
 updateOrderLog();
 animate();
 </script>
-</div>
+</body>
+</html>

@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Babb Works — Three Pillars & Revenue Trajectory</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif&family=DM+Sans:wght@300;400;500;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --steel: #1a2332;
+    --steel-mid: #2c3e50;
+    --forge-orange: #d35400;
+    --forge-amber: #e67e22;
+    --circuit-blue: #2e86de;
+    --circuit-teal: #0abde3;
+    --light-steel: #dfe6e9;
+    --cream: #faf8f5;
+    --warm-white: #f7f4ef;
+  }
+
+  body {
+    background: var(--steel);
+    font-family: 'DM Sans', sans-serif;
+    color: #e8e2d8;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .canvas {
+    width: 1200px;
+    min-height: 900px;
+    margin: 0 auto;
+    position: relative;
+    padding: 48px 56px;
+    background: linear-gradient(165deg, #1a2332 0%, #0f1922 40%, #162030 100%);
+    overflow: hidden;
+  }
+
+  .canvas::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: 
+      radial-gradient(ellipse 800px 400px at 20% 10%, rgba(46,134,222,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse 600px 500px at 85% 70%, rgba(211,84,0,0.05) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  /* Grid pattern overlay */
+  .grid-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: 
+      linear-gradient(rgba(46,134,222,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(46,134,222,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+  }
+
+  .header {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 40px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid rgba(211,84,0,0.3);
+  }
+
+  .brand {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .brand-name {
+    font-family: 'Instrument Serif', serif;
+    font-size: 38px;
+    color: var(--cream);
+    letter-spacing: 2px;
+    line-height: 1;
+  }
+
+  .brand-tag {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    color: var(--forge-orange);
+    font-weight: 500;
+  }
+
+  .doc-label {
+    text-align: right;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: rgba(232,226,216,0.4);
+    line-height: 1.8;
+  }
+
+  .doc-label span {
+    display: block;
+    color: var(--circuit-teal);
+    font-weight: 600;
+  }
+
+  /* THREE PILLARS SECTION */
+  .section-title {
+    position: relative;
+    z-index: 2;
+    font-family: 'Instrument Serif', serif;
+    font-size: 28px;
+    color: var(--cream);
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+  }
+
+  .section-subtitle {
+    font-size: 13px;
+    color: rgba(232,226,216,0.5);
+    margin-bottom: 32px;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+  }
+
+  .pillars {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-bottom: 48px;
+  }
+
+  .pillar {
+    position: relative;
+    background: linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 28px 24px;
+    transition: all 0.4s ease;
+    overflow: hidden;
+  }
+
+  .pillar::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 12px 12px 0 0;
+  }
+
+  .pillar.production::before { background: linear-gradient(90deg, var(--forge-orange), var(--forge-amber)); }
+  .pillar.research::before { background: linear-gradient(90deg, var(--circuit-blue), var(--circuit-teal)); }
+  .pillar.education::before { background: linear-gradient(90deg, #27ae60, #2ecc71); }
+
+  .pillar-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    font-size: 22px;
+  }
+
+  .pillar.production .pillar-icon { background: rgba(211,84,0,0.15); color: var(--forge-amber); }
+  .pillar.research .pillar-icon { background: rgba(46,134,222,0.15); color: var(--circuit-teal); }
+  .pillar.education .pillar-icon { background: rgba(39,174,96,0.15); color: #2ecc71; }
+
+  .pillar-name {
+    font-family: 'Instrument Serif', serif;
+    font-size: 22px;
+    color: var(--cream);
+    margin-bottom: 6px;
+  }
+
+  .pillar-desc {
+    font-size: 12.5px;
+    color: rgba(232,226,216,0.55);
+    line-height: 1.65;
+    margin-bottom: 16px;
+    font-weight: 300;
+  }
+
+  .pillar-metrics {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .metric-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+  }
+
+  .metric-label { color: rgba(232,226,216,0.4); }
+  .metric-value { font-weight: 600; font-size: 13px; }
+
+  .pillar.production .metric-value { color: var(--forge-amber); }
+  .pillar.research .metric-value { color: var(--circuit-teal); }
+  .pillar.education .metric-value { color: #2ecc71; }
+
+  /* REVENUE CHART SECTION */
+  .chart-section {
+    position: relative;
+    z-index: 2;
+    margin-top: 8px;
+  }
+
+  .chart-container {
+    position: relative;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 12px;
+    padding: 32px 36px 28px;
+  }
+
+  .chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 28px;
+  }
+
+  .chart-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: 22px;
+    color: var(--cream);
+  }
+
+  .chart-total {
+    text-align: right;
+  }
+
+  .chart-total-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: rgba(232,226,216,0.4);
+  }
+
+  .chart-total-value {
+    font-family: 'Instrument Serif', serif;
+    font-size: 36px;
+    color: var(--forge-amber);
+    line-height: 1;
+  }
+
+  .bars-area {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    height: 200px;
+    padding: 0 20px;
+    gap: 0;
+  }
+
+  .bar-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .bar-stack {
+    width: 56px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+  }
+
+  .bar-segment {
+    width: 100%;
+    border-radius: 4px 4px 0 0;
+    position: relative;
+    transition: all 0.3s ease;
+    min-height: 2px;
+  }
+
+  .bar-segment:first-child { border-radius: 4px 4px 0 0; }
+
+  .bar-segment.products { background: linear-gradient(180deg, var(--forge-amber), var(--forge-orange)); }
+  .bar-segment.assembly { background: linear-gradient(180deg, var(--circuit-teal), var(--circuit-blue)); }
+  .bar-segment.consulting { background: linear-gradient(180deg, #55efc4, #00b894); }
+  .bar-segment.training { background: linear-gradient(180deg, #a29bfe, #6c5ce7); }
+
+  .bar-value {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--cream);
+    margin-bottom: 4px;
+  }
+
+  .bar-year {
+    font-size: 12px;
+    color: rgba(232,226,216,0.5);
+    font-weight: 500;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Legend */
+  .legend {
+    display: flex;
+    gap: 24px;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    justify-content: center;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11.5px;
+    color: rgba(232,226,216,0.55);
+  }
+
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+  }
+
+  .legend-dot.products { background: var(--forge-amber); }
+  .legend-dot.assembly { background: var(--circuit-teal); }
+  .legend-dot.consulting { background: #00b894; }
+  .legend-dot.training { background: #6c5ce7; }
+
+  /* Bottom bar */
+  .bottom-bar {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 28px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(211,84,0,0.2);
+  }
+
+  .bottom-stat {
+    text-align: center;
+  }
+
+  .bottom-stat-value {
+    font-family: 'Instrument Serif', serif;
+    font-size: 26px;
+    color: var(--forge-amber);
+  }
+
+  .bottom-stat-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: rgba(232,226,216,0.35);
+    margin-top: 2px;
+  }
+
+  .divider-vert {
+    width: 1px;
+    height: 40px;
+    background: rgba(255,255,255,0.08);
+  }
+
+  /* Animations */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .pillar { animation: fadeInUp 0.6s ease forwards; }
+  .pillar:nth-child(1) { animation-delay: 0.1s; }
+  .pillar:nth-child(2) { animation-delay: 0.25s; }
+  .pillar:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes growUp {
+    from { transform: scaleY(0); }
+    to { transform: scaleY(1); }
+  }
+
+  .bar-stack {
+    transform-origin: bottom;
+    animation: growUp 0.8s ease forwards;
+  }
+
+  .bar-group:nth-child(1) .bar-stack { animation-delay: 0.5s; }
+  .bar-group:nth-child(2) .bar-stack { animation-delay: 0.65s; }
+  .bar-group:nth-child(3) .bar-stack { animation-delay: 0.8s; }
+  .bar-group:nth-child(4) .bar-stack { animation-delay: 0.95s; }
+  .bar-group:nth-child(5) .bar-stack { animation-delay: 1.1s; }
+</style>
+</head>
+<body>
+<div class="canvas">
+  <div class="grid-overlay"></div>
+
+  <div class="header">
+    <div class="brand">
+      <div class="brand-name">BABB WORKS</div>
+      <div class="brand-tag">Electronics Assembly Center — Hamilton, ON</div>
+    </div>
+    <div class="doc-label">
+      Investor Overview<br>
+      <span>Three Pillars & Growth</span>
+    </div>
+  </div>
+
+  <div class="section-title">The Three Pillars</div>
+  <div class="section-subtitle">Production, Research, and Education — three integrated engines driving diversified, resilient revenue</div>
+
+  <div class="pillars">
+    <div class="pillar production">
+      <div class="pillar-icon">⚡</div>
+      <div class="pillar-name">Production</div>
+      <div class="pillar-desc">Batch manufacturing of ruggedized field controllers, industrial edge computers, and custom microcontroller boards. Runs of 50–5,000 units per order.</div>
+      <div class="pillar-metrics">
+        <div class="metric-row">
+          <span class="metric-label">Year 1 Revenue</span>
+          <span class="metric-value">$270K</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-label">Year 5 Target</span>
+          <span class="metric-value">$2.7M</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-label">Revenue Share</span>
+          <span class="metric-value">73%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="pillar research">
+      <div class="pillar-icon">◈</div>
+      <div class="pillar-name">Research</div>
+      <div class="pillar-desc">Deep firmware optimization at assembly & binary level. Power minimization, custom instruction sets, and hardware-software co-design consulting.</div>
+      <div class="pillar-metrics">
+        <div class="metric-row">
+          <span class="metric-label">Year 1 Revenue</span>
+          <span class="metric-value">$60K</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-label">Year 5 Target</span>
+          <span class="metric-value">$400K</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-label">SR&ED Recovery</span>
+          <span class="metric-value">Up to 43%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="pillar education">
+      <div class="pillar-icon">▣</div>
+      <div class="pillar-name">Education</div>
+      <div class="pillar-desc">Hands-on training in electronics assembly, IPC certification, microcontroller programming from C to assembly. Mohawk & McMaster partnerships.</div>
+      <div class="pillar-metrics">
+        <div class="metric-row">
+          <span class="metric-label">Year 1 Revenue</span>
+          <span class="metric-value">$40K</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-label">Year 5 Target</span>
+          <span class="metric-value">$300K</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-label">Cohort Size</span>
+          <span class="metric-value">12 → 24 seats</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chart-section">
+    <div class="chart-container">
+      <div class="chart-header">
+        <div class="chart-title">Revenue Trajectory — 5-Year Projection</div>
+        <div class="chart-total">
+          <div class="chart-total-label">Year 5 Total Revenue</div>
+          <div class="chart-total-value">$3.4M</div>
+        </div>
+      </div>
+
+      <div class="bars-area">
+        <div class="bar-group">
+          <div class="bar-value">$370K</div>
+          <div class="bar-stack">
+            <div class="bar-segment products" style="height:36px"></div>
+            <div class="bar-segment assembly" style="height:18px"></div>
+            <div class="bar-segment consulting" style="height:12px"></div>
+            <div class="bar-segment training" style="height:8px"></div>
+          </div>
+          <div class="bar-year">Year 1</div>
+        </div>
+
+        <div class="bar-group">
+          <div class="bar-value">$680K</div>
+          <div class="bar-stack">
+            <div class="bar-segment products" style="height:56px"></div>
+            <div class="bar-segment assembly" style="height:32px"></div>
+            <div class="bar-segment consulting" style="height:18px"></div>
+            <div class="bar-segment training" style="height:12px"></div>
+          </div>
+          <div class="bar-year">Year 2</div>
+        </div>
+
+        <div class="bar-group">
+          <div class="bar-value">$1.35M</div>
+          <div class="bar-stack">
+            <div class="bar-segment products" style="height:86px"></div>
+            <div class="bar-segment assembly" style="height:46px"></div>
+            <div class="bar-segment consulting" style="height:26px"></div>
+            <div class="bar-segment training" style="height:20px"></div>
+          </div>
+          <div class="bar-year">Year 3</div>
+        </div>
+
+        <div class="bar-group">
+          <div class="bar-value">$2.2M</div>
+          <div class="bar-stack">
+            <div class="bar-segment products" style="height:116px"></div>
+            <div class="bar-segment assembly" style="height:62px"></div>
+            <div class="bar-segment consulting" style="height:34px"></div>
+            <div class="bar-segment training" style="height:26px"></div>
+          </div>
+          <div class="bar-year">Year 4</div>
+        </div>
+
+        <div class="bar-group">
+          <div class="bar-value">$3.4M</div>
+          <div class="bar-stack">
+            <div class="bar-segment products" style="height:150px"></div>
+            <div class="bar-segment assembly" style="height:75px"></div>
+            <div class="bar-segment consulting" style="height:33px"></div>
+            <div class="bar-segment training" style="height:25px"></div>
+          </div>
+          <div class="bar-year">Year 5</div>
+        </div>
+      </div>
+
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot products"></div>Product Sales</div>
+        <div class="legend-item"><div class="legend-dot assembly"></div>Contract Assembly</div>
+        <div class="legend-item"><div class="legend-dot consulting"></div>Firmware Consulting</div>
+        <div class="legend-item"><div class="legend-dot training"></div>Training Programs</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-bar">
+    <div class="bottom-stat">
+      <div class="bottom-stat-value">9×</div>
+      <div class="bottom-stat-label">5-Year Revenue Growth</div>
+    </div>
+    <div class="divider-vert"></div>
+    <div class="bottom-stat">
+      <div class="bottom-stat-value">$510K</div>
+      <div class="bottom-stat-label">Phase 1 Capital Required</div>
+    </div>
+    <div class="divider-vert"></div>
+    <div class="bottom-stat">
+      <div class="bottom-stat-value">4 Streams</div>
+      <div class="bottom-stat-label">Diversified Revenue</div>
+    </div>
+    <div class="divider-vert"></div>
+    <div class="bottom-stat">
+      <div class="bottom-stat-value">60–90</div>
+      <div class="bottom-stat-label">Total Jobs by Year 5</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
